@@ -8,6 +8,8 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.FlagSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.StringSpeciesFeature
 import com.cobblemon.mod.common.pokemon.*
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import dev.roanoke.betterbreeding.breeding.PastureUtils.toIVs
 import dev.roanoke.betterbreeding.breeding.PastureUtils.toIdArray
 import dev.roanoke.betterbreeding.breeding.PastureUtils.toIntArray
@@ -66,6 +68,22 @@ data class EggInfo(
                     shinyNbt
                 )
             }
+            @JvmStatic
+            fun fromJson(json: JsonObject): EggInfo {
+                val gson = Gson()
+                val species = PokemonSpecies.getByName(json["species"].asString) ?: PokemonSpecies.getByPokedexNumber(json["species"].asInt)
+                val ivs = json["ivs"].asJsonArray.map { it.asInt }.toIntArray()
+                val nature = json["nature"].asString.let { Natures.getNature(Identifier(it)) }
+                val form = species?.forms?.find { it.formOnlyShowdownId() == json["form"].asString }
+                val eggMoves = json["eggMoves"].asJsonArray.map { it.asInt }.toIntArray()
+                val ability = json["ability"].asString
+                val pokeball = json["pokeball"].asString
+                val shiny = json["shiny"].asBoolean
+
+                return EggInfo(
+                    species, ivs.toIVs(), nature, form, eggMoves.toMoves(), ability, pokeball, shiny
+                )
+            }
         }
 
         fun toNbt(nbt: NbtCompound) {
@@ -78,6 +96,22 @@ data class EggInfo(
             nbt.putString(Keys.Pokeball.key, pokeballName)
             shiny?.let { nbt.putBoolean(Keys.Shiny.key, it) }
         }
+
+        fun toJson(): JsonObject {
+            val gson = Gson()
+            val json = JsonObject()
+            json.addProperty("species", species?.showdownId())
+            json.add("ivs", gson.toJsonTree(ivs?.toIntArray()))
+            json.addProperty("nature", nature?.name.toString())
+            json.addProperty("form", form?.formOnlyShowdownId())
+            json.add("eggMoves", gson.toJsonTree(eggMoves?.toIdArray() ?: intArrayOf()))
+            json.addProperty("ability", ability)
+            json.addProperty("pokeball", pokeballName)
+            json.addProperty("shiny", shiny)
+
+            return json
+        }
+
 
         fun getEggItem(): ItemStack {
             val eggStack: ItemStack = ItemBuilder(Items.TURTLE_EGG)

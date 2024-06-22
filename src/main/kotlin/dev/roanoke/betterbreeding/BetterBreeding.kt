@@ -6,9 +6,13 @@ import dev.roanoke.betterbreeding.breeding.EggInfo
 import net.fabricmc.api.ModInitializer
 import dev.roanoke.betterbreeding.commands.BetterBreedingCommandRegistration
 import dev.roanoke.betterbreeding.items.EggItem
+import dev.roanoke.rib.callbacks.RibInitCallback
+import dev.roanoke.rib.gui.configurable.CGuiManager
+import dev.roanoke.rib.utils.FileUtils
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.text.Text
 
 
@@ -18,10 +22,27 @@ class BetterBreeding : ModInitializer {
 
         val MODID = "betterbreeding"
 
+        val MAIN_DIR = FabricLoader.getInstance().configDir.resolve("BetterBreeding")
+
+        val PASTURES_DIR = MAIN_DIR.resolve("Pastures")
+
+        val GUI_DIR = MAIN_DIR.resolve("GUI")
+        val MENU_DIR = GUI_DIR.resolve("Menus")
+
+        val GUIs: CGuiManager = CGuiManager(MENU_DIR, GUI_DIR.resolve("item_definitions.json"))
+        val PASTURES: PastureManager = PastureManager()
+
     }
 
     override fun onInitialize() {
         CommandRegistrationCallback.EVENT.register(BetterBreedingCommandRegistration::register)
+
+        FileUtils.copyResourceToFile("/betterbreeding/gui/menus/virtual_pasture.json", MENU_DIR.resolve("virtual_pasture.json"))
+        FileUtils.copyResourceToFile("/betterbreeding/gui/item_definitions.json", GUI_DIR.resolve("item_definitions.json"))
+
+        RibInitCallback.EVENT.register {
+            GUIs.setup()
+        }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
@@ -52,15 +73,6 @@ class BetterBreeding : ModInitializer {
                                 stack.decrement(1)
 
                                 val pokemon = info.getPokemon()
-
-                                for (move in info.eggMoves ?: setOf()) {
-                                    // Always adding the move to benched moves to easily add it in its allAccessibleMoves so
-                                    // the pokemon will be able to transfer its eggmoves to its children anytime
-                                    pokemon.benchedMoves.add(BenchedMove(move, 0))
-                                    if (pokemon.moveSet.hasSpace()) {
-                                        pokemon.moveSet.add(move.create())
-                                    }
-                                }
 
                                 party.add(pokemon)
 

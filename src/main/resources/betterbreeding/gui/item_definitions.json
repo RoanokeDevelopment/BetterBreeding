@@ -1,0 +1,10 @@
+{
+  "defaultFillItem": {
+    "id": "minecraft:black_stained_glass_pane",
+    "name": ""
+  },
+  "defaultElementFillItem": {
+    "id": "minecraft:gray_stained_glass_pane",
+    "name": ""
+  }
+}

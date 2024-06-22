@@ -8,10 +8,13 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.exceptions.CommandSyntaxException
+import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.breeding.EggInfo
 import dev.roanoke.betterbreeding.breeding.PastureUtils
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.utils.ExamplePermissions
+import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
@@ -41,6 +44,24 @@ object BetterBreedingCommands {
                 .permission(ExamplePermissions.EGG_INFO)
                 .executes(this::eggInfo)
         )
+        dispatcher.register(
+            CommandManager.literal("openDayCare")
+                .permission(ExamplePermissions.OPEN_DAY_CARE)
+                .then(
+                    CommandManager.argument("player", EntityArgumentType.player())
+                        .executes(this::openDayCare)
+                )
+        )
+    }
+
+    private fun openDayCare(context: CommandContext<ServerCommandSource>) : Int {
+        try {
+            val target = EntityArgumentType.getPlayer(context, "player") ?: return 1
+            BetterBreeding.PASTURES.openPasture(target);
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 1
     }
 
     private fun forceHatch(context: CommandContext<ServerCommandSource>) : Int {

@@ -1,0 +1,17 @@
+{
+  "id": "virtual_pasture",
+  "gui_type": "G9X5",
+  "gui": [
+    "#########",
+    "####I####",
+    "##X###X##",
+    "####E####",
+    "#########"
+  ],
+  "keys": {
+    "#": "defaultFillItem",
+    "X": "defaultElementFillItem",
+    "I": "defaultElementFillItem",
+    "E": "defaultElementFillItem"
+  }
+}
