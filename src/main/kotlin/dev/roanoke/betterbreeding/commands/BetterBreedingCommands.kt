@@ -36,6 +36,11 @@ object BetterBreedingCommands {
                 .permission(ExamplePermissions.FORCE_HATCH)
                 .executes(this::forceHatch)
         )
+        dispatcher.register(
+            CommandManager.literal("eggInfo")
+                .permission(ExamplePermissions.EGG_INFO)
+                .executes(this::eggInfo)
+        )
     }
 
     private fun forceHatch(context: CommandContext<ServerCommandSource>) : Int {
@@ -59,11 +64,28 @@ object BetterBreedingCommands {
         return Command.SINGLE_SUCCESS
     }
 
+    private fun eggInfo(context: CommandContext<ServerCommandSource>) : Int {
+        val player: ServerPlayerEntity = context.source.playerOrThrow
+
+        player.handItems.forEach { item ->
+            if (EggItem.isEgg(item)) {
+                val eggInfo: EggInfo? = EggItem.getEggInfo(item)
+                if (eggInfo != null) {
+                    val timer = item.nbt?.getInt("timer") ?: 100
+                    player.sendMessage(Text.literal("Egg Timer: $timer"))
+                    player.sendMessage(Text.literal("Egg Species: ${eggInfo.species?.name}"))
+                }
+            }
+        }
+
+        return Command.SINGLE_SUCCESS
+    }
+
     private fun forceBreed(context: CommandContext<ServerCommandSource>) : Int {
         val player: ServerPlayerEntity = context.source.playerOrThrow
 
-        val slot1: Int = IntegerArgumentType.getInteger(context, "slot1")
-        val slot2: Int = IntegerArgumentType.getInteger(context, "slot2")
+        val slot1: Int = IntegerArgumentType.getInteger(context, "slot1") - 1
+        val slot2: Int = IntegerArgumentType.getInteger(context, "slot2") - 1
 
         val party = Cobblemon.storage.getParty(player.uuid)
 
