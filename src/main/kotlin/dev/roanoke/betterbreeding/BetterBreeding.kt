@@ -38,6 +38,7 @@ class BetterBreeding : ModInitializer {
         CommandRegistrationCallback.EVENT.register(BetterBreedingCommandRegistration::register)
 
         FileUtils.copyResourceToFile("/betterbreeding/gui/menus/virtual_pasture.json", MENU_DIR.resolve("virtual_pasture.json"))
+        FileUtils.copyResourceToFile("/betterbreeding/gui/menus/virtual_pasture_pokeswapper.json", MENU_DIR.resolve("virtual_pasture_pokeswapper.json"))
         FileUtils.copyResourceToFile("/betterbreeding/gui/item_definitions.json", GUI_DIR.resolve("item_definitions.json"))
 
         RibInitCallback.EVENT.register {

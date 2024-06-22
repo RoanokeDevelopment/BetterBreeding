@@ -11,6 +11,10 @@ class PastureManager {
 
     }
 
+    fun savePasture(pasture: VirtualPasture) {
+        println("pretending to save")
+    }
+
     fun openPasture(player: ServerPlayerEntity) {
         var pasture = pastures.find {
             it.player == player.uuid

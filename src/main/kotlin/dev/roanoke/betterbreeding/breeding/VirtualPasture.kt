@@ -58,6 +58,88 @@ class VirtualPasture(
         return json
     }
 
+    fun openPokeSwapperPastureGui(player: ServerPlayerEntity) {
+
+        val cGui: ConfiguredGUI = BetterBreeding.GUIs.getGui("virtual_pasture_pokeswapper") ?: return
+        val party = Cobblemon.storage.getParty(player.uuid)
+
+        val gui = cGui.getGui(
+            player = player,
+            elements = mapOf(
+                "X" to pokemon.map {
+                    if (it == null) {
+                        GuiElementBuilder.from(Items.GRAY_STAINED_GLASS.defaultStack)
+                    } else {
+                        GuiElementBuilder.from(GuiUtils.getPokemonGuiElement(it))
+                            .setCallback { _, _, _ ->
+                                pokemon.remove(it)
+                                party.add(it)
+                                BetterBreeding.PASTURES.savePasture(this)
+                                player.sendMessage(Text.literal("Retrieved your Pokemon from the Day Care!"))
+                                openPokeSwapperPastureGui(player)
+                            }
+                    }
+                },
+                "P" to party.map { GuiElementBuilder.from(GuiUtils.getPokemonGuiElement(it))
+                    .setCallback { _, _, _ ->
+                        if (pokemon.filterNotNull().size > 1) {
+                            player.sendMessage(Text.literal("There's no room for that Pokemon in the Day Care!"))
+                        } else {
+                            if (party.remove(it)) {
+                                val indexToReplace = pokemon.indexOfFirst { pmon -> pmon == null }
+                                if (indexToReplace == -1) {
+                                    pokemon.add(it)
+                                } else {
+                                    pokemon.set(indexToReplace, it)
+                                }
+                                BetterBreeding.PASTURES.savePasture(this)
+                                openPokeSwapperPastureGui(player)
+                                player.sendMessage(Text.literal("Moved your Pokemon over to the Day Care"))
+                            } else {
+                                player.sendMessage(Text.literal("You don't even have that Pokemon anymore..."))
+                            }
+                        }
+                    }},
+                "I" to listOf(GuiElementBuilder.from(ItemBuilder(Items.BEEHIVE)
+                    .setCustomName(Text.literal("The Birds and the Bees"))
+                    .addLore(listOf(
+                        Text.literal(""),
+                        Text.literal("Leave two compatible Pokemon in here for a while"),
+                        Text.literal("When you come back, you may find an Egg..."),
+                        Text.literal(""),
+                        Text.literal("Click your Pokemon to move them to the pasture and back.")
+                    ))
+                    .build())),
+                "E" to listOf(GuiElementBuilder.from(ItemBuilder(Items.COMPOSTER)
+                    .setCustomName(Text.literal("Egg Hutch"))
+                    .addLore(listOf(
+                        if (egg != null)
+                            Text.literal("Click to collect your Egg!")
+                        else
+                            Text.literal("There isn't an Egg in here, yet...")
+                    ))
+                    .build())
+                    .setCallback { _, _, _ ->
+                        if (egg != null) {
+                            player.giveOrDropItemStack(egg!!.getEggItem(), true)
+                            egg = null;
+                            player.sendMessage(Text.literal("You found an Egg in the hutch!"))
+                        } else {
+                            player.sendMessage(Text.literal("There's nothing in there..."))
+                        }
+                    }
+                )
+            ),
+            onClose = {
+                openPastureGui(player)
+            }
+        )
+
+        gui.title = Text.literal("Roanoke Day Care")
+
+        gui.open()
+    }
+
     fun openPastureGui(player: ServerPlayerEntity) {
 
         val cGui: ConfiguredGUI = BetterBreeding.GUIs.getGui("virtual_pasture") ?: return
@@ -77,9 +159,14 @@ class VirtualPasture(
                     .addLore(listOf(
                         Text.literal(""),
                         Text.literal("Leave two compatible Pokemon in here for a while"),
-                        Text.literal("When you come back, you may find an Egg...")
+                        Text.literal("When you come back, you may find an Egg..."),
+                        Text.literal(""),
+                        Text.literal("Click here to add and withdraw Pokemon from the Day Care")
                     ))
-                    .build())),
+                    .build())
+                    .setCallback { _, _, _ ->
+                        openPokeSwapperPastureGui(player)
+                    }),
                 "E" to listOf(GuiElementBuilder.from(ItemBuilder(Items.COMPOSTER)
                     .setCustomName(Text.literal("Egg Hutch"))
                     .addLore(listOf(

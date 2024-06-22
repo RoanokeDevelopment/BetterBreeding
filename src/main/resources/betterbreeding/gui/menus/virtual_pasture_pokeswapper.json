@@ -1,0 +1,18 @@
+{
+  "id": "virtual_pasture_pokeswapper",
+  "gui_type": "G9X5",
+  "gui": [
+    "#########",
+    "#PP###I##",
+    "#PP##X#X#",
+    "#PP###E##",
+    "#########"
+  ],
+  "keys": {
+    "#": "defaultFillItem",
+    "X": "defaultElementFillItem",
+    "I": "defaultElementFillItem",
+    "E": "defaultElementFillItem",
+    "P": "defaultElementFillItem"
+  }
+}
