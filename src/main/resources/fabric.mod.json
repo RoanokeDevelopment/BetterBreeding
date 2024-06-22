@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "kotlinfabrictemplate",
+  "version": "${version}",
+  "name": "KotlinFabricTemplate",
+  "description": "A template mod for Kotlin and Fabric",
+  "authors": [
+    "complacentdev"
+  ],
+  "license": "All Right's Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "KotlinFabricTemplate"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "fabric": "*",
+    "minecraft": "1.20.1",
+    "cobblemon": ">=1.4.0+1.20.1"
+  }
+}
