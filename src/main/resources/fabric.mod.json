@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "kotlinfabrictemplate",
-  "version": "${version}",
-  "name": "KotlinFabricTemplate",
-  "description": "A template mod for Kotlin and Fabric",
+  "id": "betterbreeding",
+  "version": "1.0.0",
+  "name": "BetterBreeding",
+  "description": "Server-Side Breeding for Cobblemon",
   "authors": [
     "complacentdev"
   ],
@@ -11,13 +11,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "KotlinFabricTemplate"
+      "dev.roanoke.betterbreeding.BetterBreeding"
     ]
   },
   "depends": {
     "fabricloader": ">=0.14.22",
     "fabric": "*",
     "minecraft": "1.20.1",
-    "cobblemon": ">=1.4.0+1.20.1"
+    "cobblemon": ">=1.5.2+1.20.1"
   }
 }

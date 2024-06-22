@@ -1,4 +1,4 @@
-package dev.roanoke.kotlinfabrictemplate.utils
+package dev.roanoke.betterbreeding.utils
 
 import com.cobblemon.mod.common.api.permission.Permission
 import com.cobblemon.mod.common.api.permission.PermissionLevel
@@ -8,7 +8,9 @@ object ExamplePermissions {
     private const val COMMAND_PREFIX = "command."
     private val permissions = arrayListOf<Permission>()
 
-    val GET_POKE_PASTE = create("${COMMAND_PREFIX}getpokepaste", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val FORCE_BREED = create("${COMMAND_PREFIX}forcebreed", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+    val FORCE_HATCH = create("${COMMAND_PREFIX}forcehatch", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
+
 
     fun all(): Iterable<Permission> = permissions
 

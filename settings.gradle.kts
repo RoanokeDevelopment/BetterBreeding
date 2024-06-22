@@ -1,4 +1,4 @@
-rootProject.name = "KotlinFabricTemplate"
+rootProject.name = "BetterBreeding"
 pluginManagement {
     repositories {
         maven("https://maven.fabricmc.net/") {
