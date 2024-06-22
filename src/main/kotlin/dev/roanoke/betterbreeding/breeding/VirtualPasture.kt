@@ -19,7 +19,8 @@ import java.util.UUID
 class VirtualPasture(
     val player: UUID,
     val pokemon: MutableList<Pokemon?>,
-    var egg: EggInfo?
+    var egg: EggInfo?,
+    var ticksTilCheck: Int = 12000
 ) {
 
     companion object {

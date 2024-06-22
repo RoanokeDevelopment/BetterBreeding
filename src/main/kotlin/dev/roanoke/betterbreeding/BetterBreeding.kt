@@ -43,6 +43,7 @@ class BetterBreeding : ModInitializer {
 
         RibInitCallback.EVENT.register {
             GUIs.setup()
+            PASTURES.setup()
         }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
