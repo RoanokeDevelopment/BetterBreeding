@@ -1,3 +1,17 @@
-# KotlinFabricTemplate by Roanoke Development
+# BetterBreeding by Roanoke Development
 
-Your go to when it's mod time
+EggInfo.kt and PastureUtils.kt taken from/derived from Cobbreeding [https://gitlab.com/ludichat/Cobbreeding]. These classes remain under the original MIT license, a copy of which is below.
+
+The rest of the project is ARR.
+
+### Cobbreeding License
+
+Copyright © 2023 Ludichat
+Copyright © 2023 Fuzuki <fuzuki@fuzuki.dev>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
