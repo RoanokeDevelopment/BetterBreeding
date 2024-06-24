@@ -48,43 +48,15 @@ class BetterBreeding : ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
-                player.inventory.combinedInventory.forEach { df -> df.forEach { stack ->
 
-                    if (EggItem.isEgg(stack)) {
-                        val timer = stack.nbt?.getInt("timer") ?: 100
-                        stack.orCreateNbt.putInt("timer", timer - 1)
+                player.inventory.main.iterator().forEach {
+                    EggItem.tryTickEgg(it, player)
+                }
 
-                        val party = Cobblemon.storage.getParty(player.uuid)
-                        for (i in 0..5) {
-                            val pokemon = party.get(i)
-                            // Looking for an ability reducing hatching time in party
-                            val incubator = pokemon?.let {
-                                val ability = it.ability.template.name
-                                (ability == "magmaarmor" || ability == "flamebody" || ability == "steamengine")
-                            } ?: false
-                            if (incubator) {
-                                stack.getOrCreateNbt().putInt("timer", timer - 2)
-                                break
-                            }
-                        }
+                player.inventory.offHand.iterator().forEach {
+                    EggItem.tryTickEgg(it, player)
+                }
 
-                        if (timer <= 0) {
-                            val info = stack.nbt?.let { EggInfo.fromNbt(it) }
-                            if (info != null) {
-                                stack.removeSubNbt("species")
-                                stack.decrement(1)
-
-                                val pokemon = info.getPokemon()
-
-                                party.add(pokemon)
-
-                                player.sendMessage(Text.literal("Your Egg hatched!"))
-                            }
-                        }
-
-                    }
-
-                }}
             }
         }
 
