@@ -1,0 +1,4 @@
+{
+  "prefix": "<white><<reset><green>Daycare<reset><white>>",
+  "error.no_pasture_in_battle": "{prefix} You can't open a Pasture while in Battle!"
+}

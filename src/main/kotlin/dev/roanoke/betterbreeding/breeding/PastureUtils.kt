@@ -41,6 +41,7 @@ import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.pokemon.*
 import dev.roanoke.rib.Rib
 import net.minecraft.item.Item
+import kotlin.math.abs
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
@@ -293,6 +294,17 @@ object PastureUtils {
         //return baby
     }
 
+    private fun getRealIV(pokemon: Pokemon, stat: Stats): Int {
+        val key = "bc_${stat.name.lowercase()}".trim()
+
+        // if doesn't have bottlecaps key, then we just return the IV directly
+        if (!pokemon.persistentData.contains(key)) {
+            return pokemon.ivs[stat]!!
+        }
+
+        return abs(pokemon.persistentData.getInt("bc_${key}"))
+    }
+
     private fun calcStats(parents: Pair<Pokemon, Pokemon>): IVs {
         val finalStats = IVs.createRandomIVs()
         val (father, mother) = parents
@@ -324,7 +336,10 @@ object PastureUtils {
             parent = pokemon
         }
 
-        parent.ivs[iv]?.let { finalStats[iv] = it }
+        parent.ivs[iv]?.let {
+            finalStats[iv] = getRealIV(parent, iv)
+        }
+
         ivs.remove(iv)
 
         var ivCount =
@@ -333,7 +348,10 @@ object PastureUtils {
         while (ivCount != 0) {
             iv = ivs.random()
             parent = parents.random()
-            parent.ivs[iv]?.let { finalStats[iv] = it }
+
+            parent.ivs[iv]?.let {
+                finalStats[iv] = getRealIV(parent, iv)
+            }
 
             ivs.remove(iv)
 

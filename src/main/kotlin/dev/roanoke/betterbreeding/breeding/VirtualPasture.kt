@@ -3,6 +3,7 @@ package dev.roanoke.betterbreeding.breeding
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.giveOrDropItemStack
+import com.cobblemon.mod.common.util.isInBattle
 import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
@@ -60,6 +61,11 @@ class VirtualPasture(
     }
 
     fun openPokeSwapperPastureGui(player: ServerPlayerEntity) {
+
+        if (player.isInBattle()) {
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.no_pasture_in_battle"))
+            return
+        }
 
         val cGui: ConfiguredGUI = BetterBreeding.GUIs.getGui("virtual_pasture_pokeswapper") ?: return
         val party = Cobblemon.storage.getParty(player.uuid)
@@ -142,6 +148,11 @@ class VirtualPasture(
     }
 
     fun openPastureGui(player: ServerPlayerEntity) {
+
+        if (player.isInBattle()) {
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.no_pasture_in_battle"))
+            return
+        }
 
         val cGui: ConfiguredGUI = BetterBreeding.GUIs.getGui("virtual_pasture") ?: return
 
