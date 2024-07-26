@@ -6,5 +6,41 @@
   "defaultElementFillItem": {
     "id": "minecraft:gray_stained_glass_pane",
     "name": ""
+  },
+  "emptyEggHutchItem": {
+    "id": "minecraft:composter",
+    "name": "Egg Hutch",
+    "lore": [
+      "There isn't an Egg in here, yet..."
+    ]
+  },
+  "filledEggHutchItem": {
+    "id": "minecraft:composter",
+    "name": "Egg Hutch",
+    "lore": [
+      "Click to collect your Egg!"
+    ]
+  },
+  "pastureInfoItem": {
+    "id": "minecraft:beehive",
+    "name": "The Birds and the Bees",
+    "lore": [
+      "",
+      "Leave two compatible Pokemon in here for a while",
+      "When you come back, you may find an egg...",
+      "",
+      "Click here to add and withdraw Pokemon from the Pasture"
+    ]
+  },
+  "pasturePokeSwapperInfoItem": {
+    "id": "minecraft:beehive",
+    "name": "The Birds and the Bees",
+    "lore": [
+      "",
+      "Leave two compatible Pokemon in here for a while",
+      "When you come back, you may find an egg...",
+      "",
+      "Click your Pokemon to move them to the pasture and back."
+    ]
   }
 }

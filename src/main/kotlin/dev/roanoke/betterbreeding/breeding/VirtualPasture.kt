@@ -60,6 +60,21 @@ class VirtualPasture(
         return json
     }
 
+    fun getHutchItem(player: ServerPlayerEntity): GuiElementBuilder {
+        var element = BetterBreeding.GUIs.getItemOrDefault("emptyEggHutchItem").gbuild()
+        if (egg != null) { element = BetterBreeding.GUIs.getItemOrDefault("filledEggHutchItem").gbuild() }
+
+        return element.setCallback { _, _, _ ->
+            if (egg != null) {
+                player.giveOrDropItemStack(egg!!.getEggItem(), true)
+                egg = null;
+                player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.claimed_egg_from_hutch"))
+            } else {
+                player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("message.hutch_empty"))
+            }
+        }
+    }
+
     fun openPokeSwapperPastureGui(player: ServerPlayerEntity) {
 
         if (player.isInBattle()) {
@@ -75,14 +90,14 @@ class VirtualPasture(
             elements = mapOf(
                 "X" to pokemon.map {
                     if (it == null) {
-                        GuiElementBuilder.from(Items.GRAY_STAINED_GLASS.defaultStack)
+                        BetterBreeding.GUIs.getItemOrDefault("defaultElementFillItem").gbuild()
                     } else {
                         GuiElementBuilder.from(GuiUtils.getPokemonGuiElement(it))
                             .setCallback { _, _, _ ->
                                 pokemon.remove(it)
                                 party.add(it)
                                 BetterBreeding.PASTURES.savePasture(this)
-                                player.sendMessage(Text.literal("Retrieved your Pokemon from the Day Care!"))
+                                player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.retrieved_pokemon_from_daycare"))
                                 openPokeSwapperPastureGui(player)
                             }
                     }
@@ -90,7 +105,7 @@ class VirtualPasture(
                 "P" to party.map { GuiElementBuilder.from(GuiUtils.getPokemonGuiElement(it))
                     .setCallback { _, _, _ ->
                         if (pokemon.filterNotNull().size > 1) {
-                            player.sendMessage(Text.literal("There's no room for that Pokemon in the Day Care!"))
+                            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.no_room_in_pasture"))
                         } else {
                             if (party.remove(it)) {
                                 val indexToReplace = pokemon.indexOfFirst { pmon -> pmon == null }
@@ -101,48 +116,21 @@ class VirtualPasture(
                                 }
                                 BetterBreeding.PASTURES.savePasture(this)
                                 openPokeSwapperPastureGui(player)
-                                player.sendMessage(Text.literal("Moved your Pokemon over to the Day Care"))
+                                player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.put_pokemon_in_daycare"))
                             } else {
                                 player.sendMessage(Text.literal("You don't even have that Pokemon anymore..."))
                             }
                         }
                     }},
-                "I" to listOf(GuiElementBuilder.from(ItemBuilder(Items.BEEHIVE)
-                    .setCustomName(Text.literal("The Birds and the Bees"))
-                    .addLore(listOf(
-                        Text.literal(""),
-                        Text.literal("Leave two compatible Pokemon in here for a while"),
-                        Text.literal("When you come back, you may find an Egg..."),
-                        Text.literal(""),
-                        Text.literal("Click your Pokemon to move them to the pasture and back.")
-                    ))
-                    .build())),
-                "E" to listOf(GuiElementBuilder.from(ItemBuilder(Items.COMPOSTER)
-                    .setCustomName(Text.literal("Egg Hutch"))
-                    .addLore(listOf(
-                        if (egg != null)
-                            Text.literal("Click to collect your Egg!")
-                        else
-                            Text.literal("There isn't an Egg in here, yet...")
-                    ))
-                    .build())
-                    .setCallback { _, _, _ ->
-                        if (egg != null) {
-                            player.giveOrDropItemStack(egg!!.getEggItem(), true)
-                            egg = null;
-                            player.sendMessage(Text.literal("You found an Egg in the hutch!"))
-                        } else {
-                            player.sendMessage(Text.literal("There's nothing in there..."))
-                        }
-                    }
-                )
+                "I" to listOf(BetterBreeding.GUIs.getItemOrDefault("pasturePokeSwapperInfoItem").gbuild()),
+                "E" to listOf(getHutchItem(player))
             ),
             onClose = {
                 openPastureGui(player)
             }
         )
 
-        gui.title = Text.literal("Roanoke Day Care")
+        gui.title = BetterBreeding.MESSAGES.getDisplayMessage("gui.pasture_menu.title")
 
         gui.open()
     }
@@ -166,42 +154,16 @@ class VirtualPasture(
                         GuiElementBuilder.from(GuiUtils.getPokemonGuiElement(it))
                     }
                 },
-                "I" to listOf(GuiElementBuilder.from(ItemBuilder(Items.BEEHIVE)
-                    .setCustomName(Text.literal("The Birds and the Bees"))
-                    .addLore(listOf(
-                        Text.literal(""),
-                        Text.literal("Leave two compatible Pokemon in here for a while"),
-                        Text.literal("When you come back, you may find an Egg..."),
-                        Text.literal(""),
-                        Text.literal("Click here to add and withdraw Pokemon from the Day Care")
-                    ))
-                    .build())
+                "I" to listOf(BetterBreeding.GUIs.getItemOrDefault("pastureInfoItem").gbuild()
                     .setCallback { _, _, _ ->
                         openPokeSwapperPastureGui(player)
                     }),
-                "E" to listOf(GuiElementBuilder.from(ItemBuilder(Items.COMPOSTER)
-                    .setCustomName(Text.literal("Egg Hutch"))
-                    .addLore(listOf(
-                        if (egg != null)
-                            Text.literal("Click to collect your Egg!")
-                        else
-                            Text.literal("There isn't an Egg in here, yet...")
-                    ))
-                    .build())
-                    .setCallback { _, _, _ ->
-                        if (egg != null) {
-                            player.giveOrDropItemStack(egg!!.getEggItem(), true)
-                            egg = null;
-                            player.sendMessage(Text.literal("You found an Egg in the hutch!"))
-                        } else {
-                            player.sendMessage(Text.literal("There's nothing in there..."))
-                        }
-                    }
+                "E" to listOf(getHutchItem(player)
                 )
             )
         )
 
-        gui.title = Text.literal("Roanoke Day Care")
+        gui.title = BetterBreeding.MESSAGES.getDisplayMessage("gui.pasture_menu.title")
 
         gui.open()
 
