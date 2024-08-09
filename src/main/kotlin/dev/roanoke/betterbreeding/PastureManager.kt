@@ -24,14 +24,14 @@ class PastureManager {
                 pasture.ticksTilCheck--
                 if (pasture.ticksTilCheck <= 0) {
 
-                    pasture.ticksTilCheck = 12000
+                    pasture.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
                     if (pasture.egg != null) {
-                        Rib.LOGGER.info("There's already an Egg in this Pasture")
                         return@forEach
                     }
 
-                    if (Random.nextBoolean()) {
+                    if (Random.nextDouble() < BetterBreeding.CONFIG.eggCheckChance) {
                         Rib.LOGGER.info("Didn't create Egg in Pasture, failed random check.")
+                        return@forEach
                     }
 
                     PastureUtils.applyMirrorHerb(pasture.pokemon)

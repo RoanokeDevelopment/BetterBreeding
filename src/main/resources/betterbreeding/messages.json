@@ -8,5 +8,5 @@
   "action.retrieved_pokemon_from_daycare": "You retrieved your Pokemon from the Daycare!",
   "action.put_pokemon_in_daycare": "You put your Pokemon in the Daycare!",
   "gui.prompt_egg_collection": "Click to collect your Egg!",
-  "gui.pasture_menu.title": "{prefix}"i
+  "gui.pasture_menu.title": "{prefix}"
 }

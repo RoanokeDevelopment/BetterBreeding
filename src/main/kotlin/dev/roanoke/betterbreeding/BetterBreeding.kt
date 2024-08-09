@@ -6,6 +6,7 @@ import dev.roanoke.betterbreeding.breeding.EggInfo
 import net.fabricmc.api.ModInitializer
 import dev.roanoke.betterbreeding.commands.BetterBreedingCommandRegistration
 import dev.roanoke.betterbreeding.items.EggItem
+import dev.roanoke.betterbreeding.utils.Config
 import dev.roanoke.rib.callbacks.RibInitCallback
 import dev.roanoke.rib.gui.configurable.CGuiManager
 import dev.roanoke.rib.utils.FileUtils
@@ -37,6 +38,8 @@ class BetterBreeding : ModInitializer {
         val ITEMS: ItemManager = ItemManager(ITEMS_PATH, "/betterbreeding/items.json")
         val PASTURES: PastureManager = PastureManager()
 
+        val CONFIG: Config = Config.load(MAIN_DIR.resolve("config.json").toFile())
+
     }
 
     override fun onInitialize() {
@@ -47,6 +50,7 @@ class BetterBreeding : ModInitializer {
         FileUtils.copyResourceToFile("/betterbreeding/gui/item_definitions.json", GUI_DIR.resolve("item_definitions.json"))
 
         RibInitCallback.EVENT.register {
+            ITEMS.setup()
             GUIs.setup()
             PASTURES.setup()
         }

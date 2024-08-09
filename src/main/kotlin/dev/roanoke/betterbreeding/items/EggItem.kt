@@ -17,7 +17,7 @@ object EggItem {
 
         info.toNbt(eggStack.orCreateNbt)
         eggStack.orCreateNbt.putInt(
-            "timer", floor((info.species?.eggCycles ?: 20) * 600 * 1.0).toInt() // 1.0 should be hatch multiplier, ?: 20 is egg cycles default
+            "timer", floor((info.species?.eggCycles ?: 20) * 1200 * BetterBreeding.CONFIG.eggHatchMultiplier).toInt() // 1.0 should be hatch multiplier, ?: 20 is egg cycles default
         )
 
         return eggStack

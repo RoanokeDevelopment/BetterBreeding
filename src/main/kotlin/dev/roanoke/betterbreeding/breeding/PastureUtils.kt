@@ -39,6 +39,7 @@ import com.cobblemon.mod.common.api.pokemon.egg.EggGroup
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.pokemon.*
+import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.rib.Rib
 import net.minecraft.item.Item
 import kotlin.math.abs
@@ -479,9 +480,52 @@ object PastureUtils {
         return ball.name.toString()
     }
 
+    private fun rollOdds(shinyOdds: Float): Boolean {
+        return if (shinyOdds < 1) true else Random.nextInt(0, shinyOdds.toInt()) == 0
+    }
+
     private fun calcShiny(parents: Pair<Pokemon, Pokemon>): Boolean?
     {
         val shinyOdds = Cobblemon.config.shinyRate
-        return if (shinyOdds < 1) true else Random.nextInt(0, shinyOdds.toInt()) == 0
+        val shinyMultiplier = BetterBreeding.CONFIG.shinyMultiplier
+
+        return when (BetterBreeding.CONFIG.shinyMethod) {
+            "masuda" -> {
+                if (parents.first.originalTrainer != parents.second.originalTrainer) {
+                    rollOdds(shinyOdds / shinyMultiplier)
+                } else {
+                    rollOdds(shinyOdds)
+                }
+            }
+            "crystal" -> {
+                var crystalOdds = shinyOdds
+
+                parents.toList().forEach {
+                    if (it.shiny) {
+                        crystalOdds /= shinyMultiplier
+                    }
+                }
+
+                return rollOdds(crystalOdds)
+            }
+            "crystal masuda" -> {
+                var crystalmasudaOdds = shinyOdds
+
+                parents.toList().forEach {
+                    if (it.shiny) {
+                        crystalmasudaOdds /= shinyMultiplier
+                    }
+                }
+
+                if (parents.first.originalTrainer != parents.second.originalTrainer) {
+                    crystalmasudaOdds /= shinyMultiplier
+                }
+
+                return rollOdds(crystalmasudaOdds)
+            }
+            else -> {
+                rollOdds(shinyOdds)
+            }
+        }
     }
 }
