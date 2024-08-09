@@ -24,7 +24,9 @@ object EggItem {
     }
 
     fun isEgg(item: ItemStack): Boolean {
-        return (item.nbt?.contains("species") ?: false) && item.isOf(Items.TURTLE_EGG)
+        return (item.nbt?.contains("species") ?: false) && item.isOf(
+            BetterBreeding.ITEMS.getItemBuilder("pokemonEgg").build().item
+        )
     }
 
     fun getEggInfo(item: ItemStack): EggInfo? {

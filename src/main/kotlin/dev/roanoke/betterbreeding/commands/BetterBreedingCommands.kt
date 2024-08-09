@@ -109,6 +109,10 @@ object BetterBreedingCommands {
             if (EggItem.isEgg(item)) {
                 val eggInfo: EggInfo? = EggItem.getEggInfo(item)
                 if (eggInfo != null) {
+
+                    item.removeSubNbt("species")
+                    item.decrement(1)
+
                     party.add(
                         eggInfo.getPokemon()
                     )
