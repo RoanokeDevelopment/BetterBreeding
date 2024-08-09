@@ -9,15 +9,19 @@ import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
 import dev.roanoke.betterbreeding.BetterBreeding
+import dev.roanoke.betterbreeding.BetterBreeding.Companion.MAIN_DIR
 import dev.roanoke.betterbreeding.breeding.EggInfo
 import dev.roanoke.betterbreeding.breeding.PastureUtils
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.utils.BetterBreedingPermissions
+import dev.roanoke.betterbreeding.utils.Config
+import dev.roanoke.rib.utils.Messages
 import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
+import kotlin.system.measureTimeMillis
 
 object BetterBreedingCommands {
 
@@ -56,6 +60,26 @@ object BetterBreedingCommands {
                 .permission(BetterBreedingPermissions.DAY_CARE)
                 .executes(this::dayCare)
         )
+        dispatcher.register(
+            CommandManager.literal("betterbreeding")
+                .permission(BetterBreedingPermissions.RELOAD)
+                .executes(this::reload)
+        )
+    }
+
+    private fun reload(context: CommandContext<ServerCommandSource>) : Int {
+        val timeTaken = measureTimeMillis {
+            BetterBreeding.MESSAGES = Messages(MAIN_DIR.resolve("messages.json"), "/betterbreeding/messages.json")
+            context.source.sendMessage(Text.literal("Reloaded BetterBreeding Messages"))
+            BetterBreeding.GUIs.reload()
+            context.source.sendMessage(Text.literal("Reloaded BetterBreeding GUIs"))
+            BetterBreeding.ITEMS.reload()
+            context.source.sendMessage(Text.literal("Reloaded BetterBreeding Egg Item Config"))
+            BetterBreeding.CONFIG = Config.load(MAIN_DIR.resolve("config.json").toFile())
+            context.source.sendMessage(Text.literal("Reloaded BetterBreeding Breeding Config"))
+        }
+        context.source.sendMessage(Text.literal("Reloaded BetterBreeding in ${timeTaken}ms"))
+        return 1
     }
 
     private fun dayCare(context: CommandContext<ServerCommandSource>) : Int {

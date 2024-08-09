@@ -13,7 +13,7 @@ object BetterBreedingPermissions {
     val EGG_INFO = create("${COMMAND_PREFIX}egginfo", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
     val OPEN_DAY_CARE = create("${COMMAND_PREFIX}opendaycare", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
     val DAY_CARE = create("${COMMAND_PREFIX}daycare", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
-
+    val RELOAD = create("${COMMAND_PREFIX}reload", PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS)
 
     fun all(): Iterable<Permission> = permissions
 

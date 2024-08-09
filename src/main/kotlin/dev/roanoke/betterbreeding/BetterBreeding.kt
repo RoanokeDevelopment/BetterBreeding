@@ -33,12 +33,12 @@ class BetterBreeding : ModInitializer {
         val MENU_DIR = GUI_DIR.resolve("Menus")
         val ITEMS_PATH = MAIN_DIR.resolve("items.json")
 
-        val MESSAGES: Messages = Messages(MAIN_DIR.resolve("messages.json"), "/betterbreeding/messages.json")
+        var MESSAGES: Messages = Messages(MAIN_DIR.resolve("messages.json"), "/betterbreeding/messages.json")
         val GUIs: CGuiManager = CGuiManager(MENU_DIR, GUI_DIR.resolve("item_definitions.json"))
         val ITEMS: ItemManager = ItemManager(ITEMS_PATH, "/betterbreeding/items.json")
         val PASTURES: PastureManager = PastureManager()
 
-        val CONFIG: Config = Config.load(MAIN_DIR.resolve("config.json").toFile())
+        var CONFIG: Config = Config.load(MAIN_DIR.resolve("config.json").toFile())
 
     }
 
