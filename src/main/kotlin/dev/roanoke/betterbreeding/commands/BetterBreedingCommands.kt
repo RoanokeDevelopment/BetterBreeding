@@ -8,12 +8,11 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.exceptions.CommandSyntaxException
 import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.breeding.EggInfo
 import dev.roanoke.betterbreeding.breeding.PastureUtils
 import dev.roanoke.betterbreeding.items.EggItem
-import dev.roanoke.betterbreeding.utils.ExamplePermissions
+import dev.roanoke.betterbreeding.utils.BetterBreedingPermissions
 import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
@@ -25,7 +24,7 @@ object BetterBreedingCommands {
     fun register(dispatcher : CommandDispatcher<ServerCommandSource>) {
         dispatcher.register(
             CommandManager.literal("forceBreed")
-                .permission(ExamplePermissions.FORCE_BREED)
+                .permission(BetterBreedingPermissions.FORCE_BREED)
                 .then(
                     CommandManager.argument("slot1", IntegerArgumentType.integer(1, 6))
                         .then(
@@ -36,22 +35,34 @@ object BetterBreedingCommands {
         );
         dispatcher.register(
             CommandManager.literal("forceHatch")
-                .permission(ExamplePermissions.FORCE_HATCH)
+                .permission(BetterBreedingPermissions.FORCE_HATCH)
                 .executes(this::forceHatch)
         )
         dispatcher.register(
             CommandManager.literal("eggInfo")
-                .permission(ExamplePermissions.EGG_INFO)
+                .permission(BetterBreedingPermissions.EGG_INFO)
                 .executes(this::eggInfo)
         )
         dispatcher.register(
             CommandManager.literal("openDayCare")
-                .permission(ExamplePermissions.OPEN_DAY_CARE)
+                .permission(BetterBreedingPermissions.OPEN_DAY_CARE)
                 .then(
                     CommandManager.argument("player", EntityArgumentType.player())
                         .executes(this::openDayCare)
                 )
         )
+        dispatcher.register(
+            CommandManager.literal("daycare")
+                .permission(BetterBreedingPermissions.DAY_CARE)
+                .executes(this::dayCare)
+        )
+    }
+
+    private fun dayCare(context: CommandContext<ServerCommandSource>) : Int {
+        context.source.player?.let {
+            BetterBreeding.PASTURES.openPasture(it)
+        }
+        return 1
     }
 
     private fun openDayCare(context: CommandContext<ServerCommandSource>) : Int {

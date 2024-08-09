@@ -5,7 +5,7 @@ import com.cobblemon.mod.common.api.permission.PermissionLevel
 import dev.roanoke.betterbreeding.BetterBreeding
 import net.minecraft.util.Identifier
 
-data class ExamplePermission(
+data class BetterBreedingPermission(
     private val node: String,
     override val level: PermissionLevel
 ) : Permission {
