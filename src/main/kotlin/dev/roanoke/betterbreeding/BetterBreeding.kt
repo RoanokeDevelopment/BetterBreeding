@@ -9,6 +9,7 @@ import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.callbacks.RibInitCallback
 import dev.roanoke.rib.gui.configurable.CGuiManager
 import dev.roanoke.rib.utils.FileUtils
+import dev.roanoke.rib.utils.ItemManager
 import dev.roanoke.rib.utils.Messages
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -29,9 +30,11 @@ class BetterBreeding : ModInitializer {
 
         val GUI_DIR = MAIN_DIR.resolve("GUI")
         val MENU_DIR = GUI_DIR.resolve("Menus")
+        val ITEMS_PATH = MAIN_DIR.resolve("items.json")
 
         val MESSAGES: Messages = Messages(MAIN_DIR.resolve("messages.json"), "/betterbreeding/messages.json")
         val GUIs: CGuiManager = CGuiManager(MENU_DIR, GUI_DIR.resolve("item_definitions.json"))
+        val ITEMS: ItemManager = ItemManager(ITEMS_PATH, "/betterbreeding/items.json")
         val PASTURES: PastureManager = PastureManager()
 
     }

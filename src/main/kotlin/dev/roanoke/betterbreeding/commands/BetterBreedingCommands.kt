@@ -122,7 +122,7 @@ object BetterBreedingCommands {
             return Command.SINGLE_SUCCESS
         }
 
-        val eggItem = eggInfo.getEggItem()
+        val eggItem = EggItem.getEggItem(eggInfo)
         player.giveOrDropItemStack(eggItem, true)
 
         return Command.SINGLE_SUCCESS

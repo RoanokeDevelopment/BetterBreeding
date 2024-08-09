@@ -140,20 +140,6 @@ data class EggInfo(
             return json
         }
 
-
-        fun getEggItem(): ItemStack {
-            val eggStack: ItemStack = ItemBuilder(Items.TURTLE_EGG)
-                .setCustomName(Text.literal("Pokemon Egg"))
-                .build()
-
-            this.toNbt(eggStack.orCreateNbt)
-            eggStack.orCreateNbt.putInt(
-                "timer", floor((species?.eggCycles ?: 20) * 600 * 1.0).toInt() // 1.0 should be hatch multiplier, ?: 20 is egg cycles default
-            )
-
-            return eggStack
-        }
-
         fun getPokemon(): Pokemon {
             val pokemonProperties = PokemonProperties()
 

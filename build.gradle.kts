@@ -42,7 +42,7 @@ dependencies {
 
     modImplementation("eu.pb4:sgui:1.2.2+1.20")
 
-    modImplementation("dev.roanoke:rib:1.8.1")
+    modImplementation("dev.roanoke:rib:1.8.3")
 
     modImplementation("com.cobblemon:fabric:1.5.0+1.20.1-SNAPSHOT")
 

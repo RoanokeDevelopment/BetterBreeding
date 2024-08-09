@@ -8,6 +8,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import dev.roanoke.betterbreeding.BetterBreeding
+import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.gui.configurable.ConfiguredGUI
 import dev.roanoke.rib.utils.GuiUtils
 import dev.roanoke.rib.utils.ItemBuilder
@@ -66,7 +67,7 @@ class VirtualPasture(
 
         return element.setCallback { _, _, _ ->
             if (egg != null) {
-                player.giveOrDropItemStack(egg!!.getEggItem(), true)
+                player.giveOrDropItemStack(EggItem.getEggItem(egg!!), true)
                 egg = null;
                 player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.claimed_egg_from_hutch"))
             } else {

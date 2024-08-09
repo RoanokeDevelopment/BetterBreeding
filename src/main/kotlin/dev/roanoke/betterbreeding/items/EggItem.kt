@@ -1,13 +1,27 @@
 package dev.roanoke.betterbreeding.items
 
 import com.cobblemon.mod.common.Cobblemon
+import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.breeding.EggInfo
+import dev.roanoke.rib.utils.ItemBuilder
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
+import kotlin.math.floor
 
 object EggItem {
+
+    fun getEggItem(info: EggInfo): ItemStack {
+        val eggStack: ItemStack = BetterBreeding.ITEMS.getItemBuilder("pokemonEgg").build()
+
+        info.toNbt(eggStack.orCreateNbt)
+        eggStack.orCreateNbt.putInt(
+            "timer", floor((info.species?.eggCycles ?: 20) * 600 * 1.0).toInt() // 1.0 should be hatch multiplier, ?: 20 is egg cycles default
+        )
+
+        return eggStack
+    }
 
     fun isEgg(item: ItemStack): Boolean {
         return (item.nbt?.contains("species") ?: false) && item.isOf(Items.TURTLE_EGG)
