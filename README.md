@@ -2,7 +2,9 @@
 
 EggInfo.kt and PastureUtils.kt taken from/derived from Cobbreeding [https://gitlab.com/ludichat/Cobbreeding]. These classes remain under the original MIT license, a copy of which is below.
 
-The rest of the project is ARR.
+All code not marked under the original Cobbreeding MIT license is covered under our AGPL license. Any server who forks this project **must** make the source code for these changes available upon request.
+
+BetterBreeding is fully documented on our Docs site [https://docs.roanoke.dev/mods/mods/betterbreeding]
 
 ### Cobbreeding License
 

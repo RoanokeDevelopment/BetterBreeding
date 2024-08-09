@@ -7,7 +7,7 @@
   "authors": [
     "complacentdev"
   ],
-  "license": "All Right's Reserved / Named Classes MIT",
+  "license": "AGPL / MIT",
   "environment": "*",
   "entrypoints": {
     "main": [
