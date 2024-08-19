@@ -14,11 +14,14 @@
       "dev.roanoke.betterbreeding.BetterBreeding"
     ]
   },
+  "mixins": [
+    "mixins.betterbreeding.json"
+  ],
   "depends": {
     "fabricloader": ">=0.14.22",
     "fabric": "*",
     "minecraft": "1.20.1",
     "cobblemon": ">=1.5.2+1.20.1",
-    "roanokelib": ">=1.8.7"
+    "roanokelib": ">=1.9.0"
   }
 }

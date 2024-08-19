@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.roanoke.betterbreeding.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": [
+    "PastureBlockEntityMixin",
+    "PastureBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
