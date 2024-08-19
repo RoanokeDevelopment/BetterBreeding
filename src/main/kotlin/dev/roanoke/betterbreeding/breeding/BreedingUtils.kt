@@ -46,7 +46,7 @@ import kotlin.math.abs
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
-object PastureUtils {
+object BreedingUtils {
 
         /**
      * Gets the Pokémon instances from the list of tethered Pokémon.

@@ -1,4 +1,4 @@
-package dev.roanoke.betterbreeding.pastures
+package dev.roanoke.betterbreeding.pastures.real
 
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import dev.roanoke.betterbreeding.BetterBreeding

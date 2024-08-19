@@ -1,11 +1,11 @@
-package dev.roanoke.betterbreeding
+package dev.roanoke.betterbreeding.pastures.virtual
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.breeding.EggInfo
-import dev.roanoke.betterbreeding.breeding.PastureUtils
-import dev.roanoke.betterbreeding.breeding.VirtualPasture
+import dev.roanoke.betterbreeding.breeding.BreedingUtils
 import dev.roanoke.rib.Rib
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.network.ServerPlayerEntity
@@ -14,7 +14,7 @@ import java.io.File
 import java.nio.file.Files
 import kotlin.random.Random
 
-class PastureManager {
+class VirtualPastureManager {
 
     val pastures: MutableList<VirtualPasture> = mutableListOf()
 
@@ -34,9 +34,9 @@ class PastureManager {
                         return@forEach
                     }
 
-                    PastureUtils.applyMirrorHerb(pasture.pokemon)
+                    BreedingUtils.applyMirrorHerb(pasture.pokemon)
 
-                    var eggInfo: EggInfo? = PastureUtils.chooseEgg(pasture.pokemon)
+                    var eggInfo: EggInfo? = BreedingUtils.chooseEgg(pasture.pokemon)
                     if (eggInfo == null) {
                         Rib.LOGGER.info("Checking Pasture: They Can't even Produce an EGG!")
                         return@forEach

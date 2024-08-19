@@ -1,7 +1,7 @@
 package dev.roanoke.betterbreeding.mixins;
 
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
-import dev.roanoke.betterbreeding.pastures.RealPastureManager;
+import dev.roanoke.betterbreeding.pastures.real.RealPastureManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;

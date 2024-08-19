@@ -1,4 +1,4 @@
-package dev.roanoke.betterbreeding.breeding
+package dev.roanoke.betterbreeding.pastures.virtual
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.Pokemon
@@ -8,10 +8,10 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import dev.roanoke.betterbreeding.BetterBreeding
+import dev.roanoke.betterbreeding.breeding.EggInfo
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.gui.configurable.ConfiguredGUI
 import dev.roanoke.rib.utils.GuiUtils
-import dev.roanoke.rib.utils.ItemBuilder
 import eu.pb4.sgui.api.elements.GuiElementBuilder
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity

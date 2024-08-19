@@ -38,17 +38,12 @@ import com.cobblemon.mod.common.api.pokemon.feature.StringSpeciesFeature
 import com.cobblemon.mod.common.pokemon.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import dev.roanoke.betterbreeding.breeding.PastureUtils.toIVs
-import dev.roanoke.betterbreeding.breeding.PastureUtils.toIdArray
-import dev.roanoke.betterbreeding.breeding.PastureUtils.toIntArray
-import dev.roanoke.betterbreeding.breeding.PastureUtils.toMoves
-import dev.roanoke.rib.utils.ItemBuilder
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
+import dev.roanoke.betterbreeding.breeding.BreedingUtils.toIVs
+import dev.roanoke.betterbreeding.breeding.BreedingUtils.toIdArray
+import dev.roanoke.betterbreeding.breeding.BreedingUtils.toIntArray
+import dev.roanoke.betterbreeding.breeding.BreedingUtils.toMoves
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.text.Text
 import net.minecraft.util.Identifier
-import kotlin.math.floor
 
 data class EggInfo(
         val species: Species?,

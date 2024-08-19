@@ -1,11 +1,9 @@
 package dev.roanoke.betterbreeding
 
-import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.api.moves.BenchedMove
-import dev.roanoke.betterbreeding.breeding.EggInfo
 import net.fabricmc.api.ModInitializer
 import dev.roanoke.betterbreeding.commands.BetterBreedingCommandRegistration
 import dev.roanoke.betterbreeding.items.EggItem
+import dev.roanoke.betterbreeding.pastures.virtual.VirtualPastureManager
 import dev.roanoke.betterbreeding.utils.Config
 import dev.roanoke.rib.callbacks.RibInitCallback
 import dev.roanoke.rib.gui.configurable.CGuiManager
@@ -13,10 +11,8 @@ import dev.roanoke.rib.utils.FileUtils
 import dev.roanoke.rib.utils.ItemManager
 import dev.roanoke.rib.utils.Messages
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.text.Text
 
 
 class BetterBreeding : ModInitializer {
@@ -36,7 +32,7 @@ class BetterBreeding : ModInitializer {
         var MESSAGES: Messages = Messages(MAIN_DIR.resolve("messages.json"), "/betterbreeding/messages.json")
         val GUIs: CGuiManager = CGuiManager(MENU_DIR, GUI_DIR.resolve("item_definitions.json"))
         val ITEMS: ItemManager = ItemManager(ITEMS_PATH, "/betterbreeding/items.json")
-        val PASTURES: PastureManager = PastureManager()
+        val PASTURES: VirtualPastureManager = VirtualPastureManager()
 
         var CONFIG: Config = Config.load(MAIN_DIR.resolve("config.json").toFile())
 

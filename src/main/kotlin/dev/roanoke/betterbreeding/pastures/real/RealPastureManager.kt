@@ -1,12 +1,12 @@
-package dev.roanoke.betterbreeding.pastures
+package dev.roanoke.betterbreeding.pastures.real
 
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.breeding.EggInfo
-import dev.roanoke.betterbreeding.breeding.PastureUtils
-import dev.roanoke.betterbreeding.breeding.PastureUtils.getPokemon
+import dev.roanoke.betterbreeding.breeding.BreedingUtils
+import dev.roanoke.betterbreeding.breeding.BreedingUtils.getPokemon
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.Rib
 import net.minecraft.block.BlockState
@@ -64,9 +64,9 @@ object RealPastureManager {
 
             val pokemon: List<Pokemon> = pasture.tetheredPokemon.getPokemon().filterNotNull()
 
-            PastureUtils.applyMirrorHerb(pokemon)
+            BreedingUtils.applyMirrorHerb(pokemon)
 
-            val eggInfo: EggInfo? = PastureUtils.chooseEgg(pokemon)
+            val eggInfo: EggInfo? = BreedingUtils.chooseEgg(pokemon)
             if (eggInfo == null) {
                 Rib.LOGGER.info("Checking Pasture ${pos}: They Can't even Produce an EGG!")
                 pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks

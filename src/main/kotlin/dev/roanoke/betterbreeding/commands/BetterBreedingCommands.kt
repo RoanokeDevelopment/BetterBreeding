@@ -11,7 +11,7 @@ import com.mojang.brigadier.context.CommandContext
 import dev.roanoke.betterbreeding.BetterBreeding
 import dev.roanoke.betterbreeding.BetterBreeding.Companion.MAIN_DIR
 import dev.roanoke.betterbreeding.breeding.EggInfo
-import dev.roanoke.betterbreeding.breeding.PastureUtils
+import dev.roanoke.betterbreeding.breeding.BreedingUtils
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.utils.BetterBreedingPermissions
 import dev.roanoke.betterbreeding.utils.Config
@@ -154,7 +154,7 @@ object BetterBreedingCommands {
             party.get(slot2)
         )
 
-        val eggInfo = PastureUtils.chooseEgg(monChoices)
+        val eggInfo = BreedingUtils.chooseEgg(monChoices)
 
         if (eggInfo == null) {
             player.sendMessage(Text.literal("Egg Info was null so they cant breed ig"))
