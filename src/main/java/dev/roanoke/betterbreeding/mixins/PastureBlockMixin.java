@@ -2,6 +2,8 @@ package dev.roanoke.betterbreeding.mixins;
 
 import com.cobblemon.mod.common.block.PastureBlock;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
+import dev.roanoke.betterbreeding.api.PastureDataProvider;
+import dev.roanoke.betterbreeding.pastures.real.RealPastureData;
 import dev.roanoke.betterbreeding.pastures.real.RealPastureManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -29,8 +31,18 @@ public abstract class PastureBlockMixin {
             BlockPos basePos = thisObject.getBasePosition(state, pos);
             BlockEntity be = world.getBlockEntity(basePos);
             System.out.println("Pasture Block Broken at " + pos.toString());
+
             if (be instanceof PokemonPastureBlockEntity) {
-                RealPastureManager.INSTANCE.onBreak((ServerWorld) world, pos, state, (ServerPlayerEntity) player, (PokemonPastureBlockEntity) be);
+
+                if (be instanceof PastureDataProvider) {
+                    System.out.println("Succesfully got PAastureDataProvider in onBroken method!");
+                    PastureDataProvider provider = (PastureDataProvider) be;
+                    RealPastureData data = provider.getPastureData();
+
+                    RealPastureManager.INSTANCE.onBreak((ServerWorld) world, pos, state, (ServerPlayerEntity) player, (PokemonPastureBlockEntity) be, data);
+
+                }
+
             }
         }
     }
