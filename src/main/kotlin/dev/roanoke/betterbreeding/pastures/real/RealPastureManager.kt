@@ -42,6 +42,11 @@ object RealPastureManager {
     }
 
     fun onTick(world: ServerWorld, pos: BlockPos, state: BlockState, pasture: PokemonPastureBlockEntity) {
+
+        if (!BetterBreeding.CONFIG.useRealPastures()) {
+            return
+        }
+
         getPastureData(pasture)?.let { pastureData ->
 
             if (pastureData.eggInfo != null) {
@@ -85,6 +90,10 @@ object RealPastureManager {
 
     fun onBreak(world: ServerWorld, pos: BlockPos, state: BlockState, player: ServerPlayerEntity, pasture: PokemonPastureBlockEntity) {
         Rib.LOGGER.info("On Break from RealPastuerManager success called")
+
+        if (!BetterBreeding.CONFIG.useRealPastures()) {
+            return
+        }
 
         getPastureData(pasture)?.let { pastureData ->
             Rib.LOGGER.info("Removing pasture data /checking for and giving egg for that OnBreak call")

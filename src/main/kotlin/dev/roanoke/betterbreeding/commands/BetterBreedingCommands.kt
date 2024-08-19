@@ -83,6 +83,11 @@ object BetterBreedingCommands {
     }
 
     private fun dayCare(context: CommandContext<ServerCommandSource>) : Int {
+
+        if (!BetterBreeding.CONFIG.useVirtualPastures()) {
+            return 1
+        }
+
         context.source.player?.let {
             BetterBreeding.PASTURES.openPasture(it)
         }
@@ -90,6 +95,11 @@ object BetterBreedingCommands {
     }
 
     private fun openDayCare(context: CommandContext<ServerCommandSource>) : Int {
+
+        if (!BetterBreeding.CONFIG.useVirtualPastures()) {
+            return 1
+        }
+
         try {
             val target = EntityArgumentType.getPlayer(context, "player") ?: return 1
             BetterBreeding.PASTURES.openPasture(target);

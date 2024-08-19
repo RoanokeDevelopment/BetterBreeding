@@ -20,6 +20,11 @@ class VirtualPastureManager {
 
     init {
         ServerTickEvents.START_SERVER_TICK.register {
+
+            if (!BetterBreeding.CONFIG.useVirtualPastures()) {
+                return@register
+            }
+
             pastures.forEach { pasture ->
                 pasture.ticksTilCheck--
                 if (pasture.ticksTilCheck <= 0) {

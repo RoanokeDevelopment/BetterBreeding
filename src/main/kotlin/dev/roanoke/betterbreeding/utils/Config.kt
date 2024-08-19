@@ -11,7 +11,8 @@ data class Config(
     var eggCheckChance: Double = 0.5,
     val eggHatchMultiplier: Double = 1.0,
     val shinyMethod: String = "disabled",
-    val shinyMultiplier: Float = 4.0f
+    val shinyMultiplier: Float = 4.0f,
+    val pastureMethod: String = "both" // could be "virtual", "real", or "both"
 ) {
 
     companion object {
@@ -39,4 +40,13 @@ data class Config(
             }
         }
     }
+
+    fun useVirtualPastures(): Boolean {
+        return pastureMethod == "virtual" || pastureMethod == "both"
+    }
+
+    fun useRealPastures(): Boolean {
+        return pastureMethod == "real" || pastureMethod == "both"
+    }
+
 }
