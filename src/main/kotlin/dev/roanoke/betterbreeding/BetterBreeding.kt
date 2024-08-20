@@ -1,9 +1,14 @@
 package dev.roanoke.betterbreeding
 
+import com.cobblemon.mod.common.api.events.CobblemonEvents
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import net.fabricmc.api.ModInitializer
 import dev.roanoke.betterbreeding.commands.BetterBreedingCommandRegistration
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.pastures.virtual.VirtualPastureManager
+import dev.roanoke.betterbreeding.utils.BreedableProperty
+import dev.roanoke.betterbreeding.utils.BreedablePropertyType
 import dev.roanoke.betterbreeding.utils.Config
 import dev.roanoke.rib.callbacks.RibInitCallback
 import dev.roanoke.rib.gui.configurable.CGuiManager
@@ -49,6 +54,18 @@ class BetterBreeding : ModInitializer {
             ITEMS.setup()
             GUIs.setup()
             PASTURES.setup()
+
+            val breedableProperty: BreedablePropertyType = BreedablePropertyType(
+                keys = listOf(
+                    "breedable=true",
+                    "breedable=false",
+                    "breedable",
+                    "unbreedable"
+                ),
+                needsKey = true
+            )
+            CustomPokemonProperty.register(breedableProperty)
+
         }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->

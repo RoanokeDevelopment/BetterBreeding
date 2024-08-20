@@ -186,8 +186,12 @@ object BreedingUtils {
      * @return Collection of all currently possible eggs in the pasture, mapping species to possible parents.
      */
     @JvmStatic
-    fun getPossibleEggs(pokemon: List<Pokemon>): Collection<Map.Entry<FormData, List<Pair<Pokemon, Pokemon>>>> {
+    fun getPossibleEggs(pokemonGroup: List<Pokemon>): Collection<Map.Entry<FormData, List<Pair<Pokemon, Pokemon>>>> {
         val eggs = HashMap<FormData, MutableList<Pair<Pokemon, Pokemon>>>()
+
+        val pokemon = pokemonGroup.filter {
+            it.persistentData.getBoolean("breedable") ?: true
+        }
 
         for (i in pokemon.indices) {
             for (j in i + 1 until pokemon.size) {
