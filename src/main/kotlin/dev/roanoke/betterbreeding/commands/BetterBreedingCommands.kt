@@ -16,6 +16,7 @@ import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.utils.BetterBreedingPermissions
 import dev.roanoke.betterbreeding.utils.Config
 import dev.roanoke.rib.utils.Messages
+import net.impactdev.impactor.api.economy.EconomyService
 import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
@@ -68,6 +69,54 @@ object BetterBreedingCommands {
                         .executes(::reload)
                 )
         )
+        dispatcher.register(
+            CommandManager.literal("neuter")
+                .permission(BetterBreedingPermissions.NEUTER)
+                .then(
+                    CommandManager.argument("slot", IntegerArgumentType.integer(1, 6))
+                        .executes(::neuter)
+                )
+        )
+    }
+
+    private fun neuter(ctx: CommandContext<ServerCommandSource>) : Int {
+        val player = ctx.source.player ?: return 1
+        val slot = IntegerArgumentType.getInteger(ctx, "slot") - 1
+
+        val party = Cobblemon.storage.getParty(player)
+
+        val pokemon = party.get(slot)
+
+        if (pokemon == null) {
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.no_pokemon_in_slot"))
+            return 1
+        }
+
+        if (pokemon.persistentData.contains("neuterer")) {
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.pokemon_already_neutered"))
+            return 1
+        }
+
+        if (BetterBreeding.CONFIG.neuterCost >= 0) {
+            val economy = EconomyService.instance()
+            val currency = economy.currencies().primary()
+            val account = economy.account(currency, player.uuid).get()
+
+            if (account.balanceAsync().get() >= BetterBreeding.CONFIG.neuterCost.toBigDecimal()) {
+                account.withdrawAsync(BetterBreeding.CONFIG.neuterCost.toBigDecimal()).get().successful()
+            } else {
+                player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.cant_afford_neuter_cost"))
+                return 1
+            }
+        }
+
+        pokemon.persistentData.putBoolean("breedable", false)
+        pokemon.persistentData.putUuid("neuterer", player.uuid)
+
+        player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.pokemon_neutered"))
+
+        return 1
+
     }
 
     private fun reload(context: CommandContext<ServerCommandSource>) : Int {
