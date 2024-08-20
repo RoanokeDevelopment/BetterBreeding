@@ -63,7 +63,10 @@ object BetterBreedingCommands {
         dispatcher.register(
             CommandManager.literal("betterbreeding")
                 .permission(BetterBreedingPermissions.RELOAD)
-                .executes(this::reload)
+                .then(
+                    CommandManager.literal("reload")
+                        .executes(::reload)
+                )
         )
     }
 

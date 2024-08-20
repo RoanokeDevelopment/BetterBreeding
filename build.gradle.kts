@@ -40,6 +40,9 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 
+    implementation("cloud.commandframework", "cloud-core", "1.8.4")
+    implementation("net.impactdev.impactor.api:economy:5.1.1-SNAPSHOT")
+
     modImplementation("eu.pb4:sgui:1.2.2+1.20")
 
     modImplementation("dev.roanoke:rib:1.9.0")
