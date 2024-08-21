@@ -30,6 +30,10 @@ object RealPastureManager {
             return
         }
 
+        if (pasture.tetheredPokemon.isEmpty()) {
+            return
+        }
+
         pastureData.ticksTilCheck--
         if (pastureData.ticksTilCheck > 0) {
             Rib.LOGGER.info("Ticks til check for ${pos}: ${pastureData.ticksTilCheck}")
