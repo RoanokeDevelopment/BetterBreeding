@@ -40,6 +40,7 @@ import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.pokemon.*
 import dev.roanoke.betterbreeding.BetterBreeding
+import dev.roanoke.betterbreeding.utils.BreedableProperty
 import dev.roanoke.rib.Rib
 import net.minecraft.item.Item
 import kotlin.math.abs
@@ -190,7 +191,8 @@ object BreedingUtils {
         val eggs = HashMap<FormData, MutableList<Pair<Pokemon, Pokemon>>>()
 
         val pokemon = pokemonGroup.filter {
-            it.persistentData.getBoolean("breedable") ?: true
+            Rib.LOGGER.info("Filtering Pokemon from Group... is it breedable? ${BreedableProperty().matches(it)}")
+            BreedableProperty().matches(it)
         }
 
         for (i in pokemon.indices) {

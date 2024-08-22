@@ -1,5 +1,6 @@
 package dev.roanoke.betterbreeding.pastures.real
 
+import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.giveOrDropItemStack
@@ -10,13 +11,66 @@ import dev.roanoke.betterbreeding.breeding.BreedingUtils.getPokemon
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.Rib
 import net.minecraft.block.BlockState
+import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
+import net.minecraft.util.Hand
+import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import java.util.UUID
 import kotlin.random.Random
 
 object RealPastureManager {
+
+    var activePastures: MutableMap<UUID, MutableSet<UUID>> = mutableMapOf()
+
+    fun getActivePastures(player: ServerPlayerEntity): MutableSet<UUID> {
+        return activePastures.getOrDefault(player.uuid, mutableSetOf())
+    }
+
+    fun toggleActivePasture(player: ServerPlayerEntity, pastureData: RealPastureData) {
+        val playersActivePastures = activePastures.getOrDefault(player.uuid, mutableSetOf())
+
+        if (playersActivePastures.contains(pastureData.uuid)) {
+            playersActivePastures.remove(pastureData.uuid)
+            pastureData.activated = false
+
+            player.sendMessage(Text.literal("Pasture deactivated"))
+
+            return
+        }
+
+        if (BetterBreeding.CONFIG.maxPastures == -1 || BetterBreeding.CONFIG.maxPastures >= playersActivePastures.size) {
+            pastureData.activated = true
+            playersActivePastures.add(pastureData.uuid)
+            activePastures[player.uuid] = playersActivePastures
+
+            player.sendMessage(Text.literal("Pasture activated!"))
+            return
+        }
+
+        pastureData.activated = false
+        player.sendMessage(Text.literal("You've reached your Pasture Limit!"))
+        return
+    }
+
+    fun checkActive(playerUUID: UUID, pastureData: RealPastureData): Boolean {
+        val playersActivePastures = activePastures.getOrDefault(playerUUID, mutableSetOf())
+
+        if (!pastureData.activated) return false
+
+        if (playersActivePastures.contains(pastureData.uuid)) return true
+
+        if (playersActivePastures.size >= BetterBreeding.CONFIG.maxPastures) {
+            pastureData.activated = false
+            return false
+        } else {
+            playersActivePastures.add(pastureData.uuid)
+            return true
+        }
+
+    }
 
     fun onTick(world: ServerWorld, pos: BlockPos, state: BlockState, pasture: PokemonPastureBlockEntity, pastureData: RealPastureData) {
 
@@ -34,16 +88,21 @@ object RealPastureManager {
             return
         }
 
+        if (!checkActive(pasture.ownerId!!, pastureData)) {
+            return
+        }
+
         pastureData.ticksTilCheck--
         if (pastureData.ticksTilCheck > 0) {
-            Rib.LOGGER.info("Ticks til check for ${pos}: ${pastureData.ticksTilCheck}")
+            Rib.LOGGER.info("Ticks Til Check: ${pastureData.ticksTilCheck}")
             return
         }
 
         // no egg, is active, and is time to check for egg
 
-        if (Random.nextDouble() < BetterBreeding.CONFIG.eggCheckChance) {
-            Rib.LOGGER.info("Didn't create Egg in Pasture, failed random check.")
+        val random = Random.nextDouble()
+        if (random < BetterBreeding.CONFIG.eggCheckChance) {
+            Rib.LOGGER.info("Didn't create Egg in Pasture, failed random check. Random var: ${random}, Egg Check Chance: ${BetterBreeding.CONFIG.eggCheckChance}")
             pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
             return
         }
@@ -82,6 +141,31 @@ object RealPastureManager {
             player.giveOrDropItemStack(EggItem.getEggItem(pastureData.eggInfo!!), true)
         }
 
+        activePastures.forEach {
+            it.value.remove(pastureData.uuid)
+        }
+
+    }
+
+    fun onUse(world: ServerWorld, player: ServerPlayerEntity, hand: Hand, hit: BlockHitResult, pastureData: RealPastureData): Boolean { // cancel?
+
+        val usedItem = player.getStackInHand(hand)
+        Rib.LOGGER.info("Used Pasture with Item ${usedItem.item.name}")
+
+        if (usedItem.isOf(Items.WOODEN_HOE)) {
+            toggleActivePasture(player, pastureData)
+            return true
+        }
+
+        if (pastureData.eggInfo != null) {
+            player.sendMessage(Text.literal("Here's the Egg we found!"))
+            player.giveOrDropItemStack(EggItem.getEggItem(pastureData.eggInfo!!), true)
+            pastureData.eggInfo = null
+            pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
+            return true
+        }
+
+        return false
     }
 
 }

@@ -9,12 +9,16 @@ import net.minecraft.nbt.NbtElement
 import java.util.UUID
 
 data class RealPastureData(
+    var uuid: UUID,
+    var activated: Boolean,
     var ticksTilCheck: Int,
     var eggInfo: EggInfo?
 ) {
     companion object {
         fun fromPastureEntity(pasture: PokemonPastureBlockEntity): RealPastureData {
             return RealPastureData(
+                uuid = UUID.randomUUID(),
+                activated = false,
                 ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks,
                 eggInfo = null
             )
@@ -30,12 +34,28 @@ data class RealPastureData(
                 return fromPastureEntity(pasture)
             }
 
+            val uuid: UUID
+            if (nbt.contains("pastureUUID")) {
+                uuid = nbt.getUuid("pastureUUID")
+            } else {
+                Rib.LOGGER.info("Pasture had no PASTURE UUID")
+                return fromPastureEntity(pasture)
+            }
+
+            val activated: Boolean
+            if (nbt.contains("activated")) {
+                activated = nbt.getBoolean("activated")
+            } else {
+                Rib.LOGGER.info("Pasture had no PASTURE ACTIVATED")
+                return fromPastureEntity(pasture)
+            }
+
             var eggInfo: EggInfo? = null
             if (nbt.contains("eggInfo")) {
                 eggInfo = EggInfo.fromNbt(nbt.getCompound("eggInfo"))
             }
 
-            return RealPastureData(ticksTilCheck, eggInfo)
+            return RealPastureData(uuid, activated, ticksTilCheck, eggInfo)
         }
 
     }
@@ -48,6 +68,8 @@ data class RealPastureData(
             eggInfo!!.toNbt(eggInfoNbt)
             nbt.put("eggInfo", eggInfoNbt)
         }
+        nbt.putBoolean("activated", activated)
+        nbt.putUuid("pastureUUID", uuid)
     }
 
 }
