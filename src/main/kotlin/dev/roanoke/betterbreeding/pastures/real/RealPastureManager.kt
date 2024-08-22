@@ -11,6 +11,8 @@ import dev.roanoke.betterbreeding.breeding.BreedingUtils.getPokemon
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.rib.Rib
 import net.minecraft.block.BlockState
+import net.minecraft.block.entity.HopperBlockEntity
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
@@ -72,6 +74,18 @@ object RealPastureManager {
 
     }
 
+    fun getHopperInventory(world: ServerWorld, pos: BlockPos): Inventory? {
+
+        val blockState = world.getBlockState(pos)
+        val blockEntity = world.getBlockEntity(pos)
+
+        if (blockState != null && blockEntity != null) {
+            return HopperBlockEntity.getInventoryAt(world, pos)
+        }
+
+        return null
+    }
+
     fun onTick(world: ServerWorld, pos: BlockPos, state: BlockState, pasture: PokemonPastureBlockEntity, pastureData: RealPastureData) {
 
         //Rib.LOGGER.info("Got onTick yippie!")
@@ -124,6 +138,18 @@ object RealPastureManager {
                     it.uuid == pasture.ownerId
                 }?.sendMessage(
             Text.literal("Hey, we found an egg in your REAL pasture!"))
+
+        getHopperInventory(world, pos.down())?.let { inventory ->
+            for (i in 0 until inventory.size()) {
+                if (inventory.getStack(i).isEmpty) {
+                    Rib.LOGGER.info("Inserting Egg into hopper")
+                    inventory.setStack(i, EggItem.getEggItem(pastureData.eggInfo!!))
+                    pastureData.eggInfo = null
+                    pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
+                    break
+                }
+            }
+        }
 
     }
 
