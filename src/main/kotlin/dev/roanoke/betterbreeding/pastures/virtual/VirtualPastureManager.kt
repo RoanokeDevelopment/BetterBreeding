@@ -35,23 +35,18 @@ class VirtualPastureManager {
                     }
 
                     if (Random.nextDouble() < BetterBreeding.CONFIG.eggCheckChance) {
-                        Rib.LOGGER.info("Didn't create Egg in Pasture, failed random check.")
                         return@forEach
                     }
 
                     BreedingUtils.applyMirrorHerb(pasture.pokemon)
 
-                    var eggInfo: EggInfo? = BreedingUtils.chooseEgg(pasture.pokemon)
-                    if (eggInfo == null) {
-                        Rib.LOGGER.info("Checking Pasture: They Can't even Produce an EGG!")
-                        return@forEach
-                    }
+                    val eggInfo: EggInfo = BreedingUtils.chooseEgg(pasture.pokemon) ?: return@forEach
 
                     pasture.egg = eggInfo
                     this.savePasture(pasture)
 
                     Rib.server?.playerManager?.playerList?.find { it.uuid == pasture.player }
-                        ?.sendMessage(Text.literal("Hey! We found an Egg for you in the Day Care!"))
+                        ?.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("message.found_egg_in_pasture"))
 
                 }
             }

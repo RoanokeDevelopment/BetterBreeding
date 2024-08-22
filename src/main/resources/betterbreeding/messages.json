@@ -5,12 +5,16 @@
   "error.no_pokemon_in_slot": "{prefix} There isn't a Pokemon in that slot!",
   "error.cant_afford_neuter_cost": "{prefix} You don't have enough money to neuter that Pokemon",
   "error.pokemon_already_neutered": "{prefix} Hey, that Pokemon's already been neutered!",
+  "error.reached_pasture_limit": "{prefix} You've reached your breeding pasture limit!",
   "message.found_egg_in_pasture": "{prefix} Hey! We found an Egg in the Daycare for you!",
   "message.hutch_empty": "There isn't an Egg in here, yet...",
   "action.pokemon_neutered": "Your Pokemon has been neutered!",
   "action.claimed_egg_from_hutch": "You found an Egg in the Hutch!",
   "action.retrieved_pokemon_from_daycare": "You retrieved your Pokemon from the Daycare!",
   "action.put_pokemon_in_daycare": "You put your Pokemon in the Daycare!",
+  "action.claimed_broken_pasture_egg": "Hey, don't forget your Egg!",
+  "action.pasture_activated": "{prefix} Activated Pasture Breeding!",
+  "action.pasture_deactivated": "{prefix} Deactivated Pasture Breeding!",
   "gui.prompt_egg_collection": "Click to collect your Egg!",
   "gui.pasture_menu.title": "Breeding Pasture"
 }

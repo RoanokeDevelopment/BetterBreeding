@@ -24,7 +24,6 @@ public abstract class PastureBlockEntityMixin implements PastureDataProvider {
     @Override
     public RealPastureData getPastureData() {
         if (pastureData == null) {
-            System.out.println("Pasture Data was null, when getting from provider, set it to default and returned.");
             pastureData = RealPastureData.Companion.fromPastureEntity((PokemonPastureBlockEntity) (Object) this);
         }
         return pastureData;

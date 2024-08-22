@@ -38,7 +38,7 @@ object RealPastureManager {
             playersActivePastures.remove(pastureData.uuid)
             pastureData.activated = false
 
-            player.sendMessage(Text.literal("Pasture deactivated"))
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.pasture_deactivated"))
 
             return
         }
@@ -48,12 +48,13 @@ object RealPastureManager {
             playersActivePastures.add(pastureData.uuid)
             activePastures[player.uuid] = playersActivePastures
 
-            player.sendMessage(Text.literal("Pasture activated!"))
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.pasture_activated"))
+
             return
         }
 
         pastureData.activated = false
-        player.sendMessage(Text.literal("You've reached your Pasture Limit!"))
+        player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("error.reached_pasture_limit"))
         return
     }
 
@@ -88,8 +89,6 @@ object RealPastureManager {
 
     fun onTick(world: ServerWorld, pos: BlockPos, state: BlockState, pasture: PokemonPastureBlockEntity, pastureData: RealPastureData) {
 
-        //Rib.LOGGER.info("Got onTick yippie!")
-
         if (!BetterBreeding.CONFIG.useRealPastures()) {
             return
         }
@@ -108,15 +107,11 @@ object RealPastureManager {
 
         pastureData.ticksTilCheck--
         if (pastureData.ticksTilCheck > 0) {
-            Rib.LOGGER.info("Ticks Til Check: ${pastureData.ticksTilCheck}")
             return
         }
 
-        // no egg, is active, and is time to check for egg
-
         val random = Random.nextDouble()
         if (random < BetterBreeding.CONFIG.eggCheckChance) {
-            Rib.LOGGER.info("Didn't create Egg in Pasture, failed random check. Random var: ${random}, Egg Check Chance: ${BetterBreeding.CONFIG.eggCheckChance}")
             pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
             return
         }
@@ -127,7 +122,6 @@ object RealPastureManager {
 
         val eggInfo: EggInfo? = BreedingUtils.chooseEgg(pokemon)
         if (eggInfo == null) {
-            Rib.LOGGER.info("Checking Pasture ${pos}: They Can't even Produce an EGG!")
             pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
             return
         }
@@ -137,16 +131,18 @@ object RealPastureManager {
         Rib.server?.playerManager?.playerList?.find {
                     it.uuid == pasture.ownerId
                 }?.sendMessage(
-            Text.literal("Hey, we found an egg in your REAL pasture!"))
+                    BetterBreeding.MESSAGES.getDisplayMessage("message.found_egg_in_pasture")
+                )
 
-        getHopperInventory(world, pos.down())?.let { inventory ->
-            for (i in 0 until inventory.size()) {
-                if (inventory.getStack(i).isEmpty) {
-                    Rib.LOGGER.info("Inserting Egg into hopper")
-                    inventory.setStack(i, EggItem.getEggItem(pastureData.eggInfo!!))
-                    pastureData.eggInfo = null
-                    pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
-                    break
+        if (BetterBreeding.CONFIG.allowHoppers) {
+            getHopperInventory(world, pos.down())?.let { inventory ->
+                for (i in 0 until inventory.size()) {
+                    if (inventory.getStack(i).isEmpty) {
+                        inventory.setStack(i, EggItem.getEggItem(pastureData.eggInfo!!))
+                        pastureData.eggInfo = null
+                        pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks
+                        break
+                    }
                 }
             }
         }
@@ -154,16 +150,13 @@ object RealPastureManager {
     }
 
     fun onBreak(world: ServerWorld, pos: BlockPos, state: BlockState, player: ServerPlayerEntity, pasture: PokemonPastureBlockEntity, pastureData: RealPastureData) {
-        Rib.LOGGER.info("On Break from RealPastuerManager success called")
 
         if (!BetterBreeding.CONFIG.useRealPastures()) {
             return
         }
 
-        Rib.LOGGER.info("Removing pasture data /checking for and giving egg for that OnBreak call")
         if (pastureData.eggInfo != null) {
-            Rib.LOGGER.info("They should be getting an egg, cuz there was one in pasture data!")
-            player.sendMessage(Text.literal("Hey, don't forget your egg!"))
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.claimed_broken_pasture_egg"))
             player.giveOrDropItemStack(EggItem.getEggItem(pastureData.eggInfo!!), true)
         }
 
@@ -176,7 +169,6 @@ object RealPastureManager {
     fun onUse(world: ServerWorld, player: ServerPlayerEntity, hand: Hand, hit: BlockHitResult, pastureData: RealPastureData): Boolean { // cancel?
 
         val usedItem = player.getStackInHand(hand)
-        Rib.LOGGER.info("Used Pasture with Item ${usedItem.item.name}")
 
         if (usedItem.isOf(Items.WOODEN_HOE)) {
             toggleActivePasture(player, pastureData)
@@ -184,7 +176,7 @@ object RealPastureManager {
         }
 
         if (pastureData.eggInfo != null) {
-            player.sendMessage(Text.literal("Here's the Egg we found!"))
+            player.sendMessage(BetterBreeding.MESSAGES.getDisplayMessage("action.claimed_egg_from_hutch"))
             player.giveOrDropItemStack(EggItem.getEggItem(pastureData.eggInfo!!), true)
             pastureData.eggInfo = null
             pastureData.ticksTilCheck = BetterBreeding.CONFIG.eggCheckTicks

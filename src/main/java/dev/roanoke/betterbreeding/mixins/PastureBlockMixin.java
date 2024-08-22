@@ -32,16 +32,13 @@ public abstract class PastureBlockMixin {
     )
     private void onBroken(World world, BlockPos pos, BlockState state, PlayerEntity player, CallbackInfo ci) {
         if (world instanceof ServerWorld && player instanceof ServerPlayerEntity) {
-            System.out.println("Starting Block Broken, getting this, should get more output..");
             PastureBlock thisObject = (PastureBlock)(Object)this;
             BlockPos basePos = thisObject.getBasePosition(state, pos);
             BlockEntity be = world.getBlockEntity(basePos);
-            System.out.println("Pasture Block Broken at " + pos.toString());
 
             if (be instanceof PokemonPastureBlockEntity) {
 
                 if (be instanceof PastureDataProvider) {
-                    System.out.println("Succesfully got PAastureDataProvider in onBroken method!");
                     PastureDataProvider provider = (PastureDataProvider) be;
                     RealPastureData data = provider.getPastureData();
 
@@ -59,7 +56,6 @@ public abstract class PastureBlockMixin {
             PastureBlock thisObject = (PastureBlock)(Object)this;
             BlockPos basePos = thisObject.getBasePosition(state, pos);
             BlockEntity be = world.getBlockEntity(basePos);
-            System.out.println("Pasture Block used at " + pos.toString());
 
             if (be instanceof PokemonPastureBlockEntity) {
                 if (be instanceof PastureDataProvider) {

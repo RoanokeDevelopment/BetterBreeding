@@ -14,7 +14,8 @@ data class Config(
     val shinyMultiplier: Float = 4.0f,
     val pastureMethod: String = "both", // could be "virtual", "real", or "both"
     val neuterCost: Int = 0,
-    val maxPastures: Int = 3
+    val maxPastures: Int = 3,
+    val allowHoppers: Boolean = false
 ) {
 
     companion object {

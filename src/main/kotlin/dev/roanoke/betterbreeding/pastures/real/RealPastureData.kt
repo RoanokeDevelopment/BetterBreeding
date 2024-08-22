@@ -25,12 +25,10 @@ data class RealPastureData(
         }
 
         fun fromNbtOrPasture(nbt: NbtCompound, pasture: PokemonPastureBlockEntity): RealPastureData {
-            Rib.LOGGER.info("READING RealPastureData from NBT")
             val ticksTilCheck: Int
             if (nbt.contains("ticksTilCheck")) {
                 ticksTilCheck = nbt.getInt("ticksTilCheck")
             } else {
-                Rib.LOGGER.info("Pasture had NO PASTURE NBT (ticksTilCheck) so LOADING FROM ENTITY")
                 return fromPastureEntity(pasture)
             }
 
@@ -38,7 +36,6 @@ data class RealPastureData(
             if (nbt.contains("pastureUUID")) {
                 uuid = nbt.getUuid("pastureUUID")
             } else {
-                Rib.LOGGER.info("Pasture had no PASTURE UUID")
                 return fromPastureEntity(pasture)
             }
 
@@ -46,7 +43,6 @@ data class RealPastureData(
             if (nbt.contains("activated")) {
                 activated = nbt.getBoolean("activated")
             } else {
-                Rib.LOGGER.info("Pasture had no PASTURE ACTIVATED")
                 return fromPastureEntity(pasture)
             }
 
@@ -61,7 +57,6 @@ data class RealPastureData(
     }
 
     fun toNbt(nbt: NbtCompound) {
-        Rib.LOGGER.info("SAVING REAL PASTURE DATA NBT - YIPPIE!")
         nbt.putInt("ticksTilCheck", ticksTilCheck)
         if (eggInfo != null) {
             val eggInfoNbt = NbtCompound()
