@@ -170,7 +170,7 @@ object RealPastureManager {
 
         val usedItem = player.getStackInHand(hand)
 
-        if (usedItem.isOf(Items.WOODEN_HOE)) {
+        if (BetterBreeding.ITEMS.getItemBuilder("pastureActivationItem").matches(usedItem)) {
             toggleActivePasture(player, pastureData)
             return true
         }
