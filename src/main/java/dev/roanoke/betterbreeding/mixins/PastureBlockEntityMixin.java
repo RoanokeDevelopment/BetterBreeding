@@ -49,7 +49,9 @@ public abstract class PastureBlockEntityMixin implements PastureDataProvider {
 
     @Inject(at = @At("HEAD"), method = "writeNbt")
     private void writeNbt(NbtCompound nbt, CallbackInfo ci) {
-        pastureData.toNbt(nbt);
+        if (pastureData != null) {
+            pastureData.toNbt(nbt);
+        }
     }
 
     @Inject(at = @At("TAIL"), method = "readNbt")
