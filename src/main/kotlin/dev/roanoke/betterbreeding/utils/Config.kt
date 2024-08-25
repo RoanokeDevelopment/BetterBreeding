@@ -1,5 +1,7 @@
 package dev.roanoke.betterbreeding.utils
 
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.pokemon.Pokemon
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -16,7 +18,8 @@ data class Config(
     val pastureMethod: String = "both", // could be "virtual", "real", or "both"
     val neuterCost: Int = 0,
     val maxPastures: Int = 3,
-    val allowHoppers: Boolean = false
+    val allowHoppers: Boolean = false,
+    val propertiesBlacklist: List<String> = listOf()
 ) {
 
     companion object {
@@ -51,6 +54,14 @@ data class Config(
 
     fun useRealPastures(): Boolean {
         return pastureMethod == "real" || pastureMethod == "both"
+    }
+
+    fun passesBlacklist(pokemon: Pokemon): Boolean {
+        return propertiesBlacklist.map {
+            PokemonProperties.parse(it)
+        }.none {
+            it.matches(pokemon)
+        }
     }
 
 }

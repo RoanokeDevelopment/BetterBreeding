@@ -191,8 +191,7 @@ object BreedingUtils {
         val eggs = HashMap<FormData, MutableList<Pair<Pokemon, Pokemon>>>()
 
         val pokemon = pokemonGroup.filter {
-            Rib.LOGGER.info("Filtering Pokemon from Group... is it breedable? ${BreedableProperty().matches(it)}")
-            BreedableProperty().matches(it)
+            BreedableProperty().matches(it) && BetterBreeding.CONFIG.passesBlacklist(it)
         }
 
         for (i in pokemon.indices) {
