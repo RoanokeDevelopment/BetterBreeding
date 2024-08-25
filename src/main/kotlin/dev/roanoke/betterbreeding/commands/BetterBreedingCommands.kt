@@ -70,6 +70,14 @@ object BetterBreedingCommands {
                 )
         )
         dispatcher.register(
+            CommandManager.literal("givePastureActivationItem")
+                .permission(BetterBreedingPermissions.GIVE_ACTIVATION_ITEM)
+                .then(
+                    CommandManager.argument("player", EntityArgumentType.player())
+                        .executes(::givePastureActivationItem)
+                )
+        )
+        dispatcher.register(
             CommandManager.literal("neuter")
                 .permission(BetterBreedingPermissions.NEUTER)
                 .then(
@@ -77,6 +85,14 @@ object BetterBreedingCommands {
                         .executes(::neuter)
                 )
         )
+    }
+
+    private fun givePastureActivationItem(ctx: CommandContext<ServerCommandSource>) : Int {
+        val player = EntityArgumentType.getPlayer(ctx, "player") ?: return 1
+        player.giveOrDropItemStack(
+            BetterBreeding.ITEMS.getItemStack("pastureActivationItem")
+        )
+        return 1
     }
 
     private fun neuter(ctx: CommandContext<ServerCommandSource>) : Int {
