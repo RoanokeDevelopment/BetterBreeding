@@ -4,26 +4,28 @@ import com.cobblemon.mod.common.api.properties.CustomPokemonProperty
 import com.cobblemon.mod.common.pokemon.Pokemon
 import dev.roanoke.rib.Rib
 
-class BreedableProperty: CustomPokemonProperty {
-
+class BreedableProperty(
     var breedable: Boolean = true
+): CustomPokemonProperty {
 
     override fun apply(pokemon: Pokemon) {
         pokemon.persistentData.putBoolean("breedable", breedable)
     }
 
     override fun asString(): String {
-        return "breedable=${breedable}"
+        return if (breedable) {
+            "breedable"
+        } else {
+            "unbreedable"
+        }
     }
 
     override fun matches(pokemon: Pokemon): Boolean {
 
         if (pokemon.persistentData.contains("breedable")) {
             val isBreedable = pokemon.persistentData.getBoolean("breedable")
-            Rib.LOGGER.info("Pokemon has breedable data and it is: $isBreedable")
             return isBreedable
         } else {
-            Rib.LOGGER.info("Pokemon didnt hav ebreedable data, returning true")
             return true
         }
     }

@@ -442,7 +442,7 @@ object BreedingUtils {
                                    form.abilities.mapping[Priority.LOWEST]?.firstOrNull()?.template ?:  // If it can't be found, the first slot of the lowest priority
                                    Abilities.DUMMY  // Basically the worst case scenario
             val remainingAbilities =
-                if (true) // Cobbreeding.config.hiddenAbilitiesEnabled
+                if (BetterBreeding.CONFIG.enabledHiddenAbilities)
                     form.abilities.mapping.values
                         .flatten()
                         .map { it.template }

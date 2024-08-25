@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "betterbreeding",
-  "version": "1.0.0",
+  "version": "${version}",
   "name": "BetterBreeding",
   "description": "Server-Side Breeding for Cobblemon",
   "authors": [
@@ -22,6 +22,6 @@
     "fabric": "*",
     "minecraft": "1.20.1",
     "cobblemon": ">=1.5.2+1.20.1",
-    "roanokelib": ">=1.9.0"
+    "roanokelib": ">=1.9.3"
   }
 }

@@ -57,10 +57,7 @@ class BetterBreeding : ModInitializer {
 
             val breedableProperty: BreedablePropertyType = BreedablePropertyType(
                 keys = listOf(
-                    "breedable=true",
-                    "breedable=false",
-                    "breedable",
-                    "unbreedable"
+                    "breedable"
                 ),
                 needsKey = true
             )

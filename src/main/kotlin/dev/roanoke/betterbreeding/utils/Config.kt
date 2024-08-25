@@ -10,6 +10,7 @@ data class Config(
     var eggCheckTicks: Int = 12000,
     var eggCheckChance: Double = 0.5,
     val eggHatchMultiplier: Double = 1.0,
+    val enabledHiddenAbilities: Boolean = true,
     val shinyMethod: String = "disabled",
     val shinyMultiplier: Float = 4.0f,
     val pastureMethod: String = "both", // could be "virtual", "real", or "both"
