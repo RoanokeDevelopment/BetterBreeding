@@ -1,5 +1,6 @@
 {
   "prefix": "<white><<reset><green>Daycare<reset><white>>",
+  "eggInfo.prefix": "<white>[<reset><green>Egg Stats<reset><white>]<reset>",
   "error.no_pasture_in_battle": "{prefix} You can't open a Pasture while in Battle!",
   "error.no_room_in_pasture": "There's no room for that Pokemon in the Pasture!",
   "error.no_pokemon_in_slot": "{prefix} There isn't a Pokemon in that slot!",

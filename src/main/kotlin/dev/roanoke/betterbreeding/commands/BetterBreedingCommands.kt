@@ -1,7 +1,9 @@
 package dev.roanoke.betterbreeding.commands
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.api.text.onHover
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.permission
 import com.mojang.brigadier.Command
@@ -15,8 +17,10 @@ import dev.roanoke.betterbreeding.breeding.BreedingUtils
 import dev.roanoke.betterbreeding.items.EggItem
 import dev.roanoke.betterbreeding.utils.BetterBreedingPermissions
 import dev.roanoke.betterbreeding.utils.Config
+import dev.roanoke.rib.Rib
 import dev.roanoke.rib.utils.Messages
 import net.impactdev.impactor.api.economy.EconomyService
+import net.kyori.adventure.text.Component
 import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
@@ -209,9 +213,59 @@ object BetterBreedingCommands {
             if (EggItem.isEgg(item)) {
                 val eggInfo: EggInfo? = EggItem.getEggInfo(item)
                 if (eggInfo != null) {
+
                     val timer = item.nbt?.getInt("timer") ?: 100
-                    player.sendMessage(Text.literal("Egg Timer: $timer"))
-                    player.sendMessage(Text.literal("Egg Species: ${eggInfo.species?.name}"))
+
+                    val ticksPerCycle = (1200 * BetterBreeding.CONFIG.eggHatchMultiplier).toInt()
+                    val cyclesLeft = timer / ticksPerCycle
+
+                    val secondsInCurrentCycle = (timer % ticksPerCycle) / 20
+
+                    var eggInfoMessage = Rib.Rib.parseText(BetterBreeding.MESSAGES.getMessage("eggInfo.prefix") + " ${eggInfo.species?.name ?: ""}")
+                    if (eggInfo.shiny == true) {
+                        eggInfoMessage = eggInfoMessage.copy().append(Rib.Rib.parseText("<reset> <bold><gold>★<reset> "))
+                    }
+
+                    var formName = eggInfo.form?.name?.capitalize() ?: "null"
+                    if (formName.lowercase() == "null") {
+                        formName = "Normal"
+                    }
+
+                    eggInfoMessage = eggInfoMessage.copy().append(
+                        Rib.Rib.parseText(" <red>[Stats]").copy().onHover(
+                            Rib.Rib.parseText("<green><underlined>${eggInfo.species?.name ?: ""}<reset>\n" +
+                                    "<light_purple>Gender: <reset> ?\n" +
+                                    "<yellow>Nature: <reset>${eggInfo.nature?.displayName?.asTranslated()?.string }}\n" +
+                                    "<blue>Ability: <reset>${eggInfo.ability.capitalize()}\n" +
+                                    "<red>Form: <reset>${formName}")
+                        )
+                    )
+
+                    val ivsString = eggInfo.ivs?.joinToString(separator="\n") { "${it.key.displayName.string}: ${it.value}"} ?: ""
+
+                    eggInfoMessage = eggInfoMessage.copy().append(
+                        Rib.Rib.parseText(" <light_purple>[IVs]").copy().onHover(
+                            Rib.Rib.parseText(ivsString)
+                        )
+                    )
+
+                    val movesString = eggInfo.eggMoves?.joinToString(separator="\n") { "${it.create().displayName.string}"} ?: ""
+
+                    eggInfoMessage = eggInfoMessage.copy().append(
+                        Rib.Rib.parseText(" <blue>[Moves]").copy().onHover(
+                            Rib.Rib.parseText(movesString)
+                        )
+                    )
+
+                    eggInfoMessage = eggInfoMessage.copy().append(
+                        Rib.Rib.parseText(" <white>[Hatch Info]").copy().onHover(
+                            Rib.Rib.parseText(
+                                "<green>Cycles remaining: <reset>${cyclesLeft}\n" +
+                                        "<aqua>Time left in Cycle: $secondsInCurrentCycle")
+                        )
+                    )
+
+                    player.sendMessage(eggInfoMessage)
                 }
             }
         }
