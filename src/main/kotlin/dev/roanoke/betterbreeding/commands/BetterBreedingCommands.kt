@@ -234,14 +234,16 @@ object BetterBreedingCommands {
                     eggInfoMessage = eggInfoMessage.copy().append(
                         Rib.Rib.parseText(" <red>[Stats]").copy().onHover(
                             Rib.Rib.parseText("<green><underlined>${eggInfo.species?.name ?: ""}<reset>\n" +
-                                    "<light_purple>Gender: <reset> ?\n" +
-                                    "<yellow>Nature: <reset>${eggInfo.nature?.displayName?.asTranslated()?.string }}\n" +
+                                    "<light_purple>Gender: <reset>${eggInfo.gender?.name?.lowercase()?.capitalize()}\n" +
+                                    "<yellow>Nature: <reset>${eggInfo.nature?.displayName?.asTranslated()?.string }\n" +
                                     "<blue>Ability: <reset>${eggInfo.ability.capitalize()}\n" +
                                     "<red>Form: <reset>${formName}")
                         )
                     )
 
-                    val ivsString = eggInfo.ivs?.joinToString(separator="\n") { "${it.key.displayName.string}: ${it.value}"} ?: ""
+                    val ivsColours = listOf("<red>", "<blue>", "<gray>", "<aqua>", "<yellow>", "<green>").iterator()
+                    val ivsList = listOf("<light_purple><underlined>IVs<reset>") + (eggInfo.ivs?.map { "${if (ivsColours.hasNext()) ivsColours.next() else ""}${it.key.displayName.string}: <reset>${it.value}" } ?: emptyList())
+                    val ivsString = ivsList.joinToString(separator = "\n")
 
                     eggInfoMessage = eggInfoMessage.copy().append(
                         Rib.Rib.parseText(" <light_purple>[IVs]").copy().onHover(
@@ -249,7 +251,9 @@ object BetterBreedingCommands {
                         )
                     )
 
-                    val movesString = eggInfo.eggMoves?.joinToString(separator="\n") { "${it.create().displayName.string}"} ?: ""
+                    val movesColours = listOf("<aqua>", "<white>", "<aqua>", "<white>").iterator()
+                    val movesList = listOf("<blue><underlined>Moves<reset>") + (eggInfo.eggMoves?.map { "- ${if (movesColours.hasNext()) movesColours.next() else ""}${it.create().displayName.string }<reset>" } ?: emptyList())
+                    val movesString = movesList.joinToString(separator = "\n")
 
                     eggInfoMessage = eggInfoMessage.copy().append(
                         Rib.Rib.parseText(" <blue>[Moves]").copy().onHover(

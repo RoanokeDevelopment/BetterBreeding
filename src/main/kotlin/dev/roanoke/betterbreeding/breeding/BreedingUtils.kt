@@ -168,11 +168,20 @@ object BreedingUtils {
                 """.trimIndent()
             )
 
+            val gender = if (form.maleRatio !in 0F..1F) {
+                Gender.GENDERLESS
+            } else if (form.maleRatio == 1F || Random.nextFloat() <= form.maleRatio) {
+                Gender.MALE
+            } else {
+                Gender.FEMALE
+            }
+
             EggInfo(
                 form.species,
                 stats,
                 nature,
                 form,
+                gender,
                 eggMoves,
                 ability,
                 pokeball,

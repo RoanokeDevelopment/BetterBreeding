@@ -44,22 +44,25 @@ import dev.roanoke.betterbreeding.breeding.BreedingUtils.toIntArray
 import dev.roanoke.betterbreeding.breeding.BreedingUtils.toMoves
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
+import kotlin.random.Random
 
 data class EggInfo(
-        val species: Species?,
-        val ivs: IVs?,
-        val nature: Nature?,
-        val form: FormData?,
-        val eggMoves: Set<MoveTemplate>?,
-        val ability: String,
-        val pokeballName: String?,
-        val shiny: Boolean?
+    val species: Species?,
+    val ivs: IVs?,
+    val nature: Nature?,
+    val form: FormData?,
+    var gender: Gender?,
+    val eggMoves: Set<MoveTemplate>?,
+    val ability: String,
+    val pokeballName: String?,
+    val shiny: Boolean?
     ) {
         enum class Keys(val key: String) {
             Species("species"),
             IVs("ivs"),
             Nature("nature"),
             Form("form"),
+            Gender("gender"),
             EggMoves("egg_moves"),
             Ability("ability"),
             Pokeball("pokeball"),
@@ -80,11 +83,27 @@ data class EggInfo(
 
                 val species = speciesNbt.let { PokemonSpecies.getByName(speciesNbt) }
                     ?: PokemonSpecies.getByPokedexNumber(nbt.getInt(Keys.Species.key))
+
+                var form = species?.forms?.find { it.formOnlyShowdownId() == formNbt } ?: species!!.standardForm
+
+                val gender: Gender? = if (nbt.contains(Keys.Gender.key)) {
+                    Gender.valueOf(nbt.getString(Keys.Gender.key))
+                } else {
+                    if (form.maleRatio !in 0F..1F) {
+                        Gender.GENDERLESS
+                    } else if (form.maleRatio == 1F || Random.nextFloat() <= form.maleRatio) {
+                        Gender.MALE
+                    } else {
+                        Gender.FEMALE
+                    }
+                }
+
                 return EggInfo(
                     species,
                     ivsNbt?.toIVs(),
                     natureNbt?.let { Natures.getNature(Identifier(it)) },
-                    species?.forms?.find { it.formOnlyShowdownId() == formNbt },
+                    form,
+                    gender,
                     eggMovesNbt?.toMoves(),
                     abilityNbt,
                     pokeballNbt,
@@ -93,19 +112,28 @@ data class EggInfo(
             }
             @JvmStatic
             fun fromJson(json: JsonObject): EggInfo {
-                val gson = Gson()
                 val species = PokemonSpecies.getByName(json["species"].asString) ?: PokemonSpecies.getByPokedexNumber(json["species"].asInt)
                 val ivs = json["ivs"].asJsonArray.map { it.asInt }.toIntArray()
                 val nature = json["nature"].asString.let { Natures.getNature(Identifier(it)) }
-                val form = species?.forms?.find { it.formOnlyShowdownId() == json["form"].asString }
+                val form = species?.forms?.find { it.formOnlyShowdownId() == json["form"].asString } ?: species!!.standardForm
                 val eggMoves = json["eggMoves"].asJsonArray.map { it.asInt }.toIntArray()
                 val ability = json["ability"].asString
                 val pokeball = json["pokeball"].asString
                 val shiny = json["shiny"].asBoolean
 
-                return EggInfo(
-                    species, ivs.toIVs(), nature, form, eggMoves.toMoves(), ability, pokeball, shiny
-                )
+                val gender: Gender = if (json.has(Keys.Gender.key)) {
+                    Gender.valueOf(json[Keys.Gender.key].asString ?: "")
+                } else {
+                    if (form.maleRatio !in 0F..1F) {
+                        Gender.GENDERLESS
+                    } else if (form.maleRatio == 1F || Random.nextFloat() <= form.maleRatio) {
+                        Gender.MALE
+                    } else {
+                        Gender.FEMALE
+                    }
+                }
+
+                return EggInfo(species, ivs.toIVs(), nature, form, gender, eggMoves.toMoves(), ability, pokeball, shiny)
             }
         }
 
@@ -114,6 +142,7 @@ data class EggInfo(
             nbt.putIntArray(Keys.IVs.key, ivs?.toIntArray() ?: intArrayOf())
             nbt.putString(Keys.Nature.key, nature?.name.toString())
             nbt.putString(Keys.Form.key, form?.formOnlyShowdownId().toString())
+            nbt.putString(Keys.Gender.key, gender?.name)
             nbt.putIntArray(Keys.EggMoves.key, eggMoves?.toIdArray() ?: intArrayOf())
             nbt.putString(Keys.Ability.key, ability)
             nbt.putString(Keys.Pokeball.key, pokeballName)
@@ -127,6 +156,7 @@ data class EggInfo(
             json.add("ivs", gson.toJsonTree(ivs?.toIntArray()))
             json.addProperty("nature", nature?.name.toString())
             json.addProperty("form", form?.formOnlyShowdownId())
+            json.addProperty("gender", gender?.name)
             json.add("eggMoves", gson.toJsonTree(eggMoves?.toIdArray() ?: intArrayOf()))
             json.addProperty("ability", ability)
             json.addProperty("pokeball", pokeballName)
@@ -159,6 +189,9 @@ data class EggInfo(
             pokemonProperties.ability = ability
             pokeballName?.let { pokemonProperties.pokeball = it }
             pokemonProperties.shiny = shiny
+            gender?.let {
+                pokemonProperties.gender = it
+            }
 
             val pokemon = pokemonProperties.create()
 

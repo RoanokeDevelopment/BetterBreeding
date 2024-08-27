@@ -30,9 +30,12 @@ object EggItem {
     }
 
     fun getEggInfo(item: ItemStack): EggInfo? {
-        return item.nbt?.let {
-            EggInfo.fromNbt(it)
+        item.nbt?.let {
+            val eggInfo = EggInfo.fromNbt(it)
+            eggInfo.toNbt(item.orCreateNbt) // save here just in case they didnt have gender info before
+            return eggInfo
         }
+        return null
     }
 
     fun tryTickEgg(stack: ItemStack, player: ServerPlayerEntity) {
