@@ -294,8 +294,11 @@ object BreedingUtils {
             pokemon.species.name == "Runerigus" ||
             pokemon.species.name == "Clodsire" ||
             pokemon.species.name == "Overqwil" ||
-            pokemon.species.name == "Sneasler")
-            return species.forms[1]
+            pokemon.species.name == "Sneasler") {
+            if (pokemon.species.forms.size > 1) {
+                return pokemon.species.forms[1]
+            }
+        }
 
         return species.forms.find { it.formOnlyShowdownId().contains(form.formOnlyShowdownId()) } ?:
                species.standardForm
